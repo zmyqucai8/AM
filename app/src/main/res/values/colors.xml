@@ -3,8 +3,13 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-
-
+    <color name="privacy_yellow">#EA8F40</color>
+    <color name="yellow">#ffeb3b</color>
+    <color name="gc_red">#df2c21</color>
+    <color name="color1">#02112E</color>
+    <color name="color11">#04225c</color>
+    <color name="color2">#ffffff</color>
+    <color name="gc_red_tag">#f1574e</color>
     <color name="bg_color">#3F51B5 </color>
     <color name="text_gray">#74757b</color>
     <color name="text_blue">#3F51B5 </color>

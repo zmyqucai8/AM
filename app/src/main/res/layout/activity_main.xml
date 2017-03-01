@@ -84,14 +84,16 @@
 
     <FrameLayout
         android:id="@+id/fragment"
+        android:layout_below="@+id/rl_actionbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/view" />
 
     <RelativeLayout
+
         android:id="@+id/rl_actionbar"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="60dp"
         android:background="@color/colorPrimaryDark">
 
         <TextView
@@ -111,7 +113,7 @@
             android:layout_centerInParent="true"
             android:layout_marginRight="15dp"
             android:text="&#xe618;"
-            android:textColor="@android:color/white"
+            android:textColor="@drawable/text_white_selector"
             android:textSize="25sp" />
     </RelativeLayout>
 

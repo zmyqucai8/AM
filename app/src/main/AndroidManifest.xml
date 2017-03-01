@@ -5,17 +5,27 @@
     <application
         android:name=".App"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".business.main.MainActivity">
+        <activity
+            android:name=".business.main.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <activity
+            android:name=".business.customer.AddCustomerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".business.equipment.AddEquipmentActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
