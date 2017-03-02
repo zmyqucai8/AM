@@ -1,12 +1,17 @@
 package com.qiaotouxi.am.framework.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.qiaotouxi.am.App;
+import com.qiaotouxi.am.framework.base.Constant;
 
 /**
  * Created by Yyyyyyy on 2017/2/28.
@@ -157,4 +162,93 @@ public class AmUtlis {
     public static String getPackageName() {
         return getContext().getPackageName();
     }
+
+    /**
+     * 显示暗屏
+     *
+     * @param activity
+     */
+    public static void showDarkScreen(Activity activity) {
+        WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
+        lp.alpha = 0.4f;
+        activity.getWindow().setAttributes(lp);
+    }
+
+    /**
+     * 隐藏暗屏
+     *
+     * @param activity
+     */
+    public static void hideDarkScreen(Activity activity) {
+        WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
+        lp.alpha = 1f;
+        activity.getWindow().setAttributes(lp);
+    }
+
+    private static Toast toast;
+
+
+    /**
+     * 替换上一个toast 显示当前  Toast
+     *
+     * @param str
+     */
+    public static void showToast(String str) {
+//        LayoutInflater inflater = LayoutInflater.from(context);
+//        View view = inflater.inflate(R.layout.toast_item,null);
+//
+//        TextView tetView = (TextView) view.findViewById(R.id.toast_text);
+//        textView.setText("  " + str + "  "); //setPadding不起作用，
+//        textView.setTextColor(Color.WHITE);
+//        textView.setGravity(Gravity.CENTER);
+//        textView.setBackgroundColor(Color.parseColor("#96000000"));
+//        view.setPadding(10,10,10,10);
+//        toast.setView(view);
+//        toast.setGravity(Gravity.BOTTOM, 0, 250);
+//        toast.setDuration(Toast.LENGTH_SHORT);
+        if (toast != null) {
+            toast.setText(str);
+        } else {
+            toast = Toast.makeText(getContext(), str, Toast.LENGTH_SHORT);
+        }
+        toast.show();
+    }
+
+
+    /**
+     * 显示red log
+     */
+    public static void showLog(String str) {
+        if (Constant.LogDebug)
+            Log.e("AM", str);
+    }
+
+    /**
+     * 得到屏幕宽度的方法
+     *
+     * @param aty
+     * @return
+     */
+    public static int getScreenW(Context aty) {
+        DisplayMetrics dm;
+        dm = aty.getResources().getDisplayMetrics();
+        int w = dm.widthPixels;
+        return w;
+    }
+
+
+    /**
+     * 得到屏幕高度的方法
+     *
+     * @param aty
+     * @return
+     */
+    public static int getScreenH(Context aty) {
+        DisplayMetrics dm;
+        dm = aty.getResources().getDisplayMetrics();
+        int h = dm.heightPixels;
+        return h;
+    }
+
+
 }

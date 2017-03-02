@@ -9,6 +9,22 @@ package com.qiaotouxi.am.framework.base;
 public class Constant {
 
     /**
+     * 权限请求回调
+     */
+    public static final int PERMISSION_PHONE = 103;
+    /**
+     * log开关
+     */
+    public static final boolean LogDebug = true;
+    /**
+     * 拍照上传的requestCode
+     */
+    public static final int CAPTURE = 101;
+    /**
+     * 相册选择的requestCode
+     */
+    public static final int ALBUM = 102;
+    /**
      * 客户管理
      */
     public static final int TYPE_CUSTOMER = 1;
