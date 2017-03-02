@@ -1,33 +1,33 @@
+This is a simple agricultural machinery sales management program
 
 
-这是一个简单的农业机械销售管理项目
+Mainly contains the modules
+1. The equipment management
+2. The customer management
 
-主要包含模块
-      1.设备管理
-      2.客户管理
 
-1.设备管理
-    - 已出售设备
-    - 未出售设备
-    - 添加设备
-    - 出售设备
-    - 设备资料
-    - 删除设备
+1. The equipment management
+- has been selling equipment
+- to sell equipment
+- add equipment
+- to sell equipment
+- equipment information
+- remove devices
    
-2.客户管理
-    - 添加客户
-    - 已购机客户
-    - 未购机客户
-    - 删除客户
-    - 客户资料
+2. The customer management
+- add customer
+- has upgrade customer
+- not upgrade customer
+- delete the customer
+- customer data
 
 
-其他说明
-1.DATA
-    - 没有service交互
-    - 数据全部保存在database以及sdcard
+
+
+Other instructions
+1. DATA
+- no service interaction
+- all data stored in the database and the sdcard
     
-2.UI
-    - 采用activity - fragment 的模式简化ui，提升复用及扩展性
-    
-    
+2. The UI
+- the activity - fragments model simplified UI, improve the reuse and extensibility
