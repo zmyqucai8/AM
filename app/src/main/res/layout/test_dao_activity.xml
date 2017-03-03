@@ -26,7 +26,7 @@
             android:id="@+id/btn_query_key_kh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="根据身份证查询客户" />
+            android:text="根据身份证查询客户 " />
 
         <Button
             android:id="@+id/btn_query_name_kh"
