@@ -25,7 +25,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name=".business.main.TestDaoActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".business.customer.AddCustomerActivity"

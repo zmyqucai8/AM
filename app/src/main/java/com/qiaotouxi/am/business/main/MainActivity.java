@@ -45,6 +45,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     TextView tvTitle;
     @BindView(R.id.tv_sbgl_ttf)
     TextView tv_sbgl_ttf;
+    @BindView(R.id.tv_test)
+    TextView tv_test;
     @BindView(R.id.tv_khgl_ttf)
     TextView tv_khgl_ttf;
     @BindView(R.id.tv_khgl)
@@ -87,6 +89,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         llSbgl.setOnClickListener(this);
         tvButton.setOnClickListener(this);
         llKhgl.setOnClickListener(this);
+        tv_test.setOnClickListener(this);
     }
 
 
@@ -157,6 +160,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.tv_button:
                 startAddActivity(mType);
+                break;
+            case R.id.tv_test:
+                startActivity(new Intent(MainActivity.this, TestDaoActivity.class));
                 break;
         }
     }

@@ -20,12 +20,17 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.qiaotouxi.am.App;
 import com.qiaotouxi.am.R;
+import com.qiaotouxi.am.business.dao.CustomerDao;
+import com.qiaotouxi.am.business.dao.CustomerDaoDao;
 import com.qiaotouxi.am.framework.base.BaseActivity;
 import com.qiaotouxi.am.framework.base.Constant;
 import com.qiaotouxi.am.framework.utils.AmUtlis;
 import com.qiaotouxi.am.framework.utils.BitmapUtils;
 import com.qiaotouxi.am.framework.view.PhotoPop;
+
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -150,9 +155,25 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
                 sex = 1;
             }
         }
+        CustomerDao dao = new CustomerDao(name, phone, cardId, location, imgPath, bzxx, sex, new Date());
+        CustomerDaoDao customerDaoDao = App.getDaoSession(this).getCustomerDaoDao();
 
-//        TODO：注意这里是否要提示未填写的内容 记得哦 我
-        AmUtlis.showToast("数据校验成功，可以保存");
+        CustomerDao unique = customerDaoDao.queryRawCreate("where CARD_ID=? order by CARD_ID", cardId).unique();
+
+        if (unique != null && unique.getCardId().equals(cardId)) {
+            //保存前根据填写的身份证号码，查询数据库， 如果存在此会员，提示身份证重复
+            AmUtlis.showToast("该身份证已被注册，请修改");
+            return;
+        }
+        try {
+            customerDaoDao.insert(dao);
+            AmUtlis.showToast("添加成功");
+//            finish();
+        } catch (Exception e) {
+            AmUtlis.showToast("添加失败");
+//            App.getDaoSession(this).getCustomerDaoDao().update(dao);
+        }
+
 
     }
 
