@@ -34,12 +34,44 @@
             android:layout_height="wrap_content"
             android:text="根据姓名查询客户" />
     </LinearLayout>
-
     <Button
         android:id="@+id/btn_delete_all"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="删除所有客户" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btn_query_all_sb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="查询所有设备" />
+
+        <Button
+            android:id="@+id/btn_query_wcs_sb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="查询未出售设备" />
+
+
+        <Button
+            android:id="@+id/btn_query_ycs_sb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="查询已出售设备" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_delete_all_sb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="删除所有设备" />
 
 
     <ScrollView

@@ -17,6 +17,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        maven { url "https://jitpack.io" }//RecyclerViewPager-lib库中需要添加的（私有仓库）
     }
 }
 

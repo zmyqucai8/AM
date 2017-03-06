@@ -7,11 +7,21 @@ import android.graphics.Typeface;
 import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.AnticipateInterpolator;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.qiaotouxi.am.App;
+import com.qiaotouxi.am.R;
+import com.qiaotouxi.am.business.equipment.EquipmentManageEvent;
 import com.qiaotouxi.am.framework.base.Constant;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by Yyyyyyy on 2017/2/28.
@@ -250,5 +260,41 @@ public class AmUtlis {
         return h;
     }
 
+
+    /**
+     * 获取一个没有数据时显示的view  ， textview
+     *
+     * @param act
+     * @param str 提示文本
+     * @return
+     */
+    public static View getEmptyView(Activity act, String str) {
+        TextView tv = new TextView(act);
+        tv.setText(str);
+        tv.setGravity(Gravity.CENTER);
+        return tv;
+    }
+
+
+    /**
+     * 启动一个缩放动画， 用在 主界面 底部tab点击选中时
+     */
+    public static void startScaleAnimation(Context context, final TextView tv_ttf, final TextView tv) {
+        Animation animation = AnimationUtils.loadAnimation(context, R.anim.click_scale);
+        animation.setInterpolator(new AnticipateInterpolator());
+        tv_ttf.startAnimation(animation);
+        tv.startAnimation(animation);
+    }
+
+    /**
+     * 发送event刷新设备管理数据
+     *
+     * @type EQUIPMENT_SOLD_NO  EQUIPMENT_SOLD_Yes
+     */
+    public static void refreshEquipmentManageData(int type) {
+        EquipmentManageEvent event = new EquipmentManageEvent();
+        event.type = type;
+        EventBus.getDefault().post(event);
+    }
 
 }

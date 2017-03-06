@@ -64,7 +64,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private EquipmentManageFragment mEquipmentManage;
     private CustomerManageFragment mCustomerManage;
-    private int mType;//当前显示的fragment类型
+    private int mType = -1;//当前显示的fragment类型
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +97,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      * @param type 0=设备管理 1=客户管理
      */
     private void setFragment(int type) {
+        if (mType == type) {
+            return;
+        }
         mType = type;
         FragmentManager fm = getFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
@@ -132,11 +135,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         switch (type) {
             case Constant.TYPE_EQUIPMENT:
+
                 tvTitle.setText("设备管理");
                 tv_sbgl_ttf.setTextColor(text_blue);
                 tv_sbgl.setTextColor(text_blue);
                 tv_khgl_ttf.setTextColor(text_gray);
                 tv_khgl.setTextColor(text_gray);
+                AmUtlis.startScaleAnimation(MainActivity.this, tv_sbgl_ttf, tv_sbgl);
                 break;
             case Constant.TYPE_CUSTOMER:
                 tvTitle.setText("客户管理");
@@ -144,6 +149,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 tv_sbgl.setTextColor(text_gray);
                 tv_khgl_ttf.setTextColor(text_blue);
                 tv_khgl.setTextColor(text_blue);
+                AmUtlis.startScaleAnimation(MainActivity.this, tv_khgl_ttf, tv_khgl);
                 break;
         }
     }

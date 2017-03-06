@@ -11,49 +11,30 @@ import java.util.Date;
 /**
  * @Created by zmy.
  * @Date 2017/3/3 0003.
- * <p>
- * <p>
- * 客户dao
+ * 客户表 Dao
  */
 
 @Entity
 public class CustomerDao {
-
     @Id
-    private Long id;
-
-    @Override
-    public String toString() {
-        return "CustomerDao{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", phone='" + phone + '\'' +
-                ", cardId='" + cardId + '\'' +
-                ", location='" + location + '\'' +
-                ", photo_path='" + photo_path + '\'' +
-                ", remark='" + remark + '\'' +
-                ", sex=" + sex +
-                ", date=" + date +
-                '}';
-    }
-
+    private Long id; //id 自增长
     @Property(nameInDb = "NAME")
-    private String name;
+    private String name;//客户姓名
     @Property(nameInDb = "PHONE")
-    private String phone;
+    private String phone;//客户手机
     @Property(nameInDb = "CARD_ID")
     @Index(unique = true)
-    private String cardId;
+    private String cardId;//客户身份证号码，  此号码作为客户唯一id， 禁止重复
     @Property(nameInDb = "LOCATION")
-    private String location;
+    private String location;//客户联系地址
     @Property(nameInDb = "PHOTO_PATH")
-    private String photo_path;
+    private String photo_path;//客户头像
     @Property(nameInDb = "REMARK")
-    private String remark;
+    private String remark;//客户备注
     @Property(nameInDb = "SEX")
-    private int sex;
+    private int sex;//客户性别
     @Property(nameInDb = "DATE")
-    private Date date;
+    private Date date;//date日期 未转
 //    @Property(nameInDb = "BILL")
 //    private List<String> bll;
 
@@ -159,5 +140,19 @@ public class CustomerDao {
         this.date = date;
     }
 
+    @Override
+    public String toString() {
+        return "CustomerDao{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                ", cardId='" + cardId + '\'' +
+                ", location='" + location + '\'' +
+                ", photo_path='" + photo_path + '\'' +
+                ", remark='" + remark + '\'' +
+                ", sex=" + sex +
+                ", date=" + date +
+                '}';
+    }
 
 }

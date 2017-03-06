@@ -121,5 +121,4 @@ public class EquipmentManageFragment extends BaseFragment implements View.OnClic
                 break;
         }
     }
-
 }

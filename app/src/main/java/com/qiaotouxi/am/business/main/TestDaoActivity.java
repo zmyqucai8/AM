@@ -11,6 +11,8 @@ import com.qiaotouxi.am.App;
 import com.qiaotouxi.am.R;
 import com.qiaotouxi.am.business.dao.CustomerDao;
 import com.qiaotouxi.am.business.dao.CustomerDaoDao;
+import com.qiaotouxi.am.business.dao.EquipmentDao;
+import com.qiaotouxi.am.business.dao.EquipmentDaoDao;
 import com.qiaotouxi.am.framework.base.BaseActivity;
 
 import java.util.List;
@@ -40,6 +42,17 @@ public class TestDaoActivity extends BaseActivity {
     Button btnQueryNameKh;
     @BindView(R.id.tv_text)
     TextView tvText;
+
+
+    @BindView(R.id.btn_delete_all_sb)
+    Button btn_delete_all_sb;
+    @BindView(R.id.btn_query_ycs_sb)
+    Button btn_query_ycs_sb;
+    @BindView(R.id.btn_query_wcs_sb)
+    Button btn_query_wcs_sb;
+    @BindView(R.id.btn_query_all_sb)
+    Button btn_query_all_sb;
+
 
     /**
      * dao对象
@@ -124,6 +137,7 @@ public class TestDaoActivity extends BaseActivity {
         btn_delete_all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //删除所有客户
                 try {
                     CustomerDaoDao customerDaoDao = App.getDaoSession(TestDaoActivity.this).getCustomerDaoDao();
                     customerDaoDao.deleteAll();
@@ -133,5 +147,95 @@ public class TestDaoActivity extends BaseActivity {
                 }
             }
         });
+
+        btn_delete_all_sb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //删除所有设备
+                try {
+                    EquipmentDaoDao customerDaoDao = App.getDaoSession(TestDaoActivity.this).getEquipmentDaoDao();
+                    customerDaoDao.deleteAll();
+                    tvText.setText("删除成功");
+                } catch (Exception e) {
+                    tvText.setText("删除失败");
+                }
+            }
+        });
+
+        btn_query_all_sb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //查询所有设备
+                EquipmentDaoDao daoDao = App.getDaoSession(TestDaoActivity.this).getEquipmentDaoDao();
+
+                List<EquipmentDao> list = daoDao.queryBuilder().list();
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < list.size(); i++) {
+
+                    builder.append("第" + i + "条数据 = " + list.get(i).toString() + "\n");
+                }
+                if (TextUtils.isEmpty(builder.toString())) {
+                    tvText.setText("没有设备数据");
+                } else {
+                    tvText.setText(builder.toString());
+                }
+
+            }
+        });
+
+
+        btn_query_wcs_sb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //查询未出售设备
+                EquipmentDaoDao daoDao = App.getDaoSession(TestDaoActivity.this).getEquipmentDaoDao();
+
+
+//                List<EquipmentDao> list = daoDao.queryRawCreate("where SELL=? order by SELL", false).list();
+                List<EquipmentDao> list = daoDao.queryBuilder().list();
+                StringBuilder builder = new StringBuilder();
+
+                for (int i = 0; i < list.size(); i++) {
+
+                    if (!list.get(i).getSell()) {
+                        builder.append("第" + i + "条数据 = " + list.get(i).toString() + "\n");
+                    }
+
+                }
+                if (TextUtils.isEmpty(builder.toString())) {
+                    tvText.setText("没有设备数据");
+                } else {
+                    tvText.setText(builder.toString());
+                }
+
+
+            }
+
+        });
+
+
+        btn_query_ycs_sb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //查询已出售设备
+                EquipmentDaoDao daoDao = App.getDaoSession(TestDaoActivity.this).getEquipmentDaoDao();
+//                List<EquipmentDao> list = daoDao.queryRawCreate("where SELL=? order by SELL", true).list();
+                List<EquipmentDao> list = daoDao.queryBuilder().list();
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i).getSell()) {
+                        builder.append("第" + i + "条数据 = " + list.get(i).toString() + "\n");
+                    }
+                }
+                if (TextUtils.isEmpty(builder.toString())) {
+                    tvText.setText("没有设备数据");
+                } else {
+                    tvText.setText(builder.toString());
+                }
+            }
+
+        });
+
+
     }
 }
