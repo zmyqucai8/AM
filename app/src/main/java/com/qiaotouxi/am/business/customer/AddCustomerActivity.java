@@ -155,7 +155,18 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
                 sex = 1;
             }
         }
-        CustomerDao dao = new CustomerDao(name, phone, cardId, location, imgPath, bzxx, sex, false, new Date());
+        CustomerDao dao = new CustomerDao();
+//        name, phone, cardId, location, imgPath, bzxx, sex, false, new Date()
+        dao.setName(name);
+        dao.setPhone(phone);
+        dao.setCardId(cardId);
+        dao.setLocation(location);
+        dao.setPhoto_path(imgPath);
+        dao.setRemark(bzxx);
+        dao.setSex(sex);
+        dao.setBuy(false);
+        dao.setPinyin(AmUtlis.getPinYin(name));
+        dao.setDate(new Date());
         CustomerDaoDao customerDaoDao = App.getDaoSession(this).getCustomerDaoDao();
 
         CustomerDao unique = customerDaoDao.queryRawCreate("where CARD_ID=? order by CARD_ID", cardId).unique();
