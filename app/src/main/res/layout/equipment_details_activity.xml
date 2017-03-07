@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/colorPrimaryDark"
+        android:gravity="center"
+        android:text="设备详情"
+        android:textColor="@android:color/white"
+        android:textSize="25sp" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="30dp"
+            android:orientation="vertical">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:id="@+id/tv_add_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="设备照片　　　　　&#xe618; 添加"
+                    android:textColor="@color/mblue" />
+
+                <TextView
+                    android:id="@+id/tv_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/shape_oval_red_bg"
+                    android:text="未出售"
+                    android:textColor="@color/white" />
+
+            </RelativeLayout>
+
+            <include layout="@layout/line" />
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/myrecycler_layout"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_margin="5dp"
+                android:background="@color/transparent"
+                android:scrollbarStyle="outsideOverlay"
+                android:scrollbars="vertical"></android.support.v7.widget.RecyclerView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="30dp"
+                android:text="设备信息"
+                android:textColor="@color/mblue" />
+
+            <include layout="@layout/line" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <!--左边竖排 名词-->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="名称" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="品牌" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="厂家" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="出厂编号" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="发动机编号" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="备注信息" />
+
+
+                </LinearLayout>
+
+
+                <!--右边一排 可编辑editext-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:orientation="vertical">
+
+
+                    <EditText
+                        android:id="@+id/et_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:ellipsize="end"
+                        android:hint="请输入名称"
+                        android:singleLine="true"
+                        android:textCursorDrawable="@drawable/shape_cursor_bg"
+                        android:textSize="14sp" />
+
+                    <EditText
+                        android:id="@+id/tv_pp"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@null"
+                        android:ellipsize="end"
+                        android:hint="请输入品牌"
+                        android:singleLine="true"
+                        android:textCursorDrawable="@drawable/shape_cursor_bg"
+                        android:textSize="14sp" />
+
+                    <EditText
+                        android:id="@+id/et_cj"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@null"
+                        android:ellipsize="end"
+                        android:hint="请输入厂家"
+                        android:singleLine="true"
+                        android:textCursorDrawable="@drawable/shape_cursor_bg"
+                        android:textSize="14sp" />
+
+                    <EditText
+                        android:id="@+id/et_ccbh"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@null"
+                        android:ellipsize="end"
+                        android:hint="请输入出厂编号"
+                        android:singleLine="true"
+                        android:textCursorDrawable="@drawable/shape_cursor_bg"
+                        android:textSize="14sp" />
+
+                    <EditText
+                        android:id="@+id/et_fdjbh"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@null"
+                        android:ellipsize="end"
+                        android:hint="请输入发动机编号"
+                        android:singleLine="true"
+                        android:textCursorDrawable="@drawable/shape_cursor_bg"
+                        android:textSize="14sp" />
+
+                    <EditText
+                        android:id="@+id/et_bzxx"
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@null"
+                        android:hint="请输入备注信息"
+                        android:maxLines="3"
+                        android:textCursorDrawable="@drawable/shape_cursor_bg"
+                        android:textSize="14sp" />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <!--购机者信息-->
+            <LinearLayout
+                android:id="@+id/ll_gjzxx"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:text="客户信息"
+                    android:textColor="@color/mblue" />
+
+                <include layout="@layout/line" />
+
+                <ImageView
+                    android:id="@+id/img_tx"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="15dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/img_tx" />
+
+                <TextView
+                    android:id="@+id/tv_kh_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:text="名称" />
+
+                <TextView
+                    android:id="@+id/tv_kh_sex"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:text="性别" />
+
+                <TextView
+                    android:id="@+id/tv_kh_puhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:text="电话" />
+
+                <TextView
+                    android:id="@+id/tv_kh_cardid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:text="身份证" />
+
+                <TextView
+                    android:id="@+id/tv_kh_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:text="联系地址" />
+
+                <TextView
+                    android:id="@+id/tv_kh_bzxx"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:text="备注信息" />
+
+
+            </LinearLayout>
+
+
+            <!--订单信息， 此项数据包含在已出售设备数据表中-->
+
+            <LinearLayout
+                android:id="@+id/ll_ddxx"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:text="订单信息"
+                    android:textColor="@color/mblue" />
+
+                <include layout="@layout/line" />
+
+
+                <TextView
+                    android:id="@+id/tv_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:text="购机日期　　　　　　　　2017年3月7日17:11:21" />
+
+                <RadioGroup
+                    android:id="@+id/radioGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rb_pay_yes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:shadowColor="@color/mblue"
+                        android:text="已付款" />
+
+                    <RadioButton
+                        android:id="@+id/rb_pay_no"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="未付款" />
+
+                </RadioGroup>
+
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/btn_save"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:background="@drawable/shape_blue_selector"
+                android:text="保存修改"
+                android:textColor="@android:color/white"
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/btn_sell"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shape_blue_selector"
+                android:text="出售设备"
+                android:textColor="@android:color/white"
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/btn_delete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:background="@drawable/shape_blue_selector"
+                android:text="删除设备"
+                android:textColor="@android:color/white"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

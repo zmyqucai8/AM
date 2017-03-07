@@ -14,10 +14,12 @@ import android.widget.TextView;
 import com.qiaotouxi.am.R;
 import com.qiaotouxi.am.framework.base.BaseFragment;
 import com.qiaotouxi.am.framework.base.Constant;
+import com.qiaotouxi.am.framework.utils.AmUtlis;
 
 import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by zmy on 2017/2/28.
@@ -37,11 +39,16 @@ public class EquipmentManageFragment extends BaseFragment implements View.OnClic
     LinearLayout llTab;
     @BindColor(R.color.color1)
     int blueColor;
+    @BindView(R.id.tv_ycs_count)
+    TextView tv_ycs_count;
+    @BindView(R.id.tv_wcs_count)
+    TextView tv_wcs_count;
 
     @Override
     protected View initView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_equipment, container, false);
         ButterKnife.bind(this, rootView);
+        EventBus.getDefault().register(this);
         if (savedInstanceState != null) {
             mEquipmentNo = (EquipmentSoldNoFragment) getFragmentManager().findFragmentByTag("mEquipmentNo");
             mEquipmentYes = (EquipmentSoldYesFragment) getFragmentManager().findFragmentByTag("mEquipmentYes");
@@ -51,6 +58,8 @@ public class EquipmentManageFragment extends BaseFragment implements View.OnClic
 
     @Override
     protected void initData() {
+
+
         tvYcs.setOnClickListener(this);
         tvWcs.setOnClickListener(this);
         setFragment(Constant.EQUIPMENT_SOLD_NO);
@@ -120,5 +129,27 @@ public class EquipmentManageFragment extends BaseFragment implements View.OnClic
                 setFragment(Constant.EQUIPMENT_SOLD_NO);
                 break;
         }
+    }
+
+    /**
+     * 接受刷新角标数量 event
+     *
+     * @param event
+     */
+    public void onEventMainThread(EquipmentManageCountEvent event) {
+        if (event.type == Constant.EQUIPMENT_SOLD_NO) {
+            AmUtlis.showLog("evnet 刷新未出售角标数量");
+            AmUtlis.setBadgerCount(tv_wcs_count, event.count);
+        } else if (event.type == Constant.EQUIPMENT_SOLD_YES) {
+            AmUtlis.showLog("evnet 刷新已出售角标数量");
+            AmUtlis.setBadgerCount(tv_ycs_count, event.count);
+        }
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

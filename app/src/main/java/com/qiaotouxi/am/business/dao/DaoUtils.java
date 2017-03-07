@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.qiaotouxi.am.App;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,5 +32,134 @@ public class DaoUtils {
         }
         return list;
     }
+
+
+    /**
+     * 删除一个设备
+     *
+     * @param dao 设备dao
+     */
+    public static boolean deleteEquipment(Context context, EquipmentDao dao) {
+
+        try {
+            EquipmentDaoDao daoDao = App.getDaoSession(context).getEquipmentDaoDao();
+            daoDao.delete(dao);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
+
+    }
+
+
+    /**
+     * 删除一个客户
+     *
+     * @param dao 客户dao
+     */
+    public static boolean deleteCustomer(Context context, CustomerDao dao) {
+
+        try {
+            CustomerDaoDao daoDao = App.getDaoSession(context).getCustomerDaoDao();
+            daoDao.delete(dao);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
+
+    }
+
+
+    /**
+     * 查询设备 根据设备id 即 发动机编号
+     */
+    public static EquipmentDao getEquipmentByID(Context context, String id) {
+        return App.getDaoSession(context).getEquipmentDaoDao().queryRawCreate("where ENGINE_ID=? order by ENGINE_ID", id).unique();
+    }
+
+    /**
+     * 查询客户 根据客户id 及身份证
+     */
+    public static CustomerDao getCustomerByID(Context context, String id) {
+        return App.getDaoSession(context).getCustomerDaoDao().queryRawCreate("where CARD_ID=? order by CARD_ID", id).unique();
+    }
+
+
+    /**
+     * 获取所有客户数据
+     *
+     * @param context
+     * @return
+     */
+    public static List<CustomerDao> getAllCustomerData(Context context) {
+
+        try {
+            return App.getDaoSession(context).getCustomerDaoDao().queryBuilder().list();
+        } catch (Exception e) {
+
+            return new ArrayList<CustomerDao>();
+        }
+
+
+    }
+
+
+    public static String[] zm = {"张",
+            "阿达a",
+            "匹配b",
+            "哦哦",
+            "已i1",
+            "请求",
+            "汪汪汪",
+            "饿饿饿",
+            "日日日",
+            "略略略",
+            "买买买",
+            "你你你",
+            "蹦蹦蹦",
+            "啧啧啧",
+            "看看看",
+            "嘎嘎嘎",
+            "发发发",
+            "对对对",
+            "谁是谁",
+            "她她她",
+            "吃吃吃",
+            "没有",
+            "还好",
+            "想你",
+            "不要",
+            "你我",
+            "粉色",
+            "梦想",
+            "你怕吗",
+            "爱好呢",
+    };
+
+    /**
+     * 测试方法  批量添加客户
+     */
+    public static void testAddCustomer(Context context) {
+        CustomerDaoDao daoDao = App.getDaoSession(context).getCustomerDaoDao();
+        ArrayList<CustomerDao> list = new ArrayList<CustomerDao>();
+        for (int i = 0; i < 30; i++) {
+            CustomerDao dao = new CustomerDao();
+            dao.setCardId("cardid" + System.currentTimeMillis() + zm[i]);
+            dao.setName(zm[i] + "姓名");
+            dao.setLocation("深圳市" + i);
+            dao.setSex(58 % 2);
+            dao.setRemark("没有备注的咯" + i);
+            dao.setBuy(58 % 2 == 0);
+            dao.setPhoto_path("/storage/emulated/0/AM_IMG/1488876098017.jpg");
+            dao.setDate(new Date());
+            dao.setPhone("15356105-" + i);
+            list.add(dao);
+        }
+        daoDao.insertInTx(list);
+
+    }
+
 
 }

@@ -3,12 +3,12 @@ package com.qiaotouxi.am.business.equipment;
 /**
  * @Created by zmy.
  * @Date 2017/3/6 0006.
- * 刷新设备管理的evnet
+ * 刷新设备管理 已出售未出售角标数量的evnet
  */
 
-public class EquipmentManageEvent {
+public class EquipmentManageCountEvent {
     /**
-     * -1 都刷新 0=刷新未出售 ，1= 刷新已出售
+     * 0=刷新未出售 ，1= 刷新已出售
      */
     public int type;
     /**
@@ -19,17 +19,17 @@ public class EquipmentManageEvent {
     /**
      * 实例对象
      */
-    public static EquipmentManageEvent mEvent;
+    public static EquipmentManageCountEvent mEvent;
 
     /**
      * 单列模式获取是咧
      *
      * @return
      */
-    public static synchronized EquipmentManageEvent getInstance() {
+    public static synchronized EquipmentManageCountEvent getInstance() {
 
         if (mEvent == null) {
-            return mEvent = new EquipmentManageEvent();
+            return mEvent = new EquipmentManageCountEvent();
         } else {
             return mEvent;
         }

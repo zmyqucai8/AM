@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.qiaotouxi.am.R;
 import com.qiaotouxi.am.business.customer.AddCustomerActivity;
 import com.qiaotouxi.am.business.customer.CustomerManageFragment;
+import com.qiaotouxi.am.business.dao.DaoUtils;
 import com.qiaotouxi.am.business.equipment.AddEquipmentActivity;
 import com.qiaotouxi.am.business.equipment.EquipmentManageFragment;
 import com.qiaotouxi.am.framework.base.BaseActivity;
@@ -70,12 +71,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        setDefaultData();
         if (savedInstanceState != null) {
             mEquipmentManage = (EquipmentManageFragment) getFragmentManager().findFragmentByTag("mEquipmentManage");
             mCustomerManage = (CustomerManageFragment) getFragmentManager().findFragmentByTag("mCustomerManage");
         }
         initView();
         setFragment(Constant.TYPE_EQUIPMENT);
+
+
+    }
+
+    /**
+     * 设置默认数据， 记得注释代码
+     */
+    private void setDefaultData() {
+        DaoUtils.testAddCustomer(MainActivity.this);
     }
 
     /**

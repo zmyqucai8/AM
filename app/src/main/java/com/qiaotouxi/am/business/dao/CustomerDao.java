@@ -1,5 +1,7 @@
 package com.qiaotouxi.am.business.dao;
 
+import com.qiaotouxi.am.framework.utils.AmUtlis;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
@@ -15,7 +17,7 @@ import java.util.Date;
  */
 
 @Entity
-public class CustomerDao {
+public class CustomerDao implements Comparable<CustomerDao> {
     @Id
     private Long id; //id 自增长
     @Property(nameInDb = "NAME")
@@ -35,12 +37,17 @@ public class CustomerDao {
     private int sex;//客户性别
     @Property(nameInDb = "DATE")
     private Date date;//date日期 未转
-//    @Property(nameInDb = "BILL")
+    //    @Property(nameInDb = "BILL")
 //    private List<String> bll;
+    @Property(nameInDb = "PINYIN")
+    private String pinyin;
+    @Property(nameInDb = "BUY")
+    private boolean buy;
 
     public CustomerDao(String name, String phone, String cardId,
-                       String location, String photo_path, String remark, int sex, Date date) {
+                       String location, String photo_path, String remark, int sex, boolean buy, Date date) {
         this.name = name;
+        this.buy = buy;
         this.phone = phone;
         this.cardId = cardId;
         this.location = location;
@@ -48,15 +55,21 @@ public class CustomerDao {
         this.remark = remark;
         this.sex = sex;
         this.date = date;
+        this.pinyin = AmUtlis.getPinYin(name);
+    }
+
+    @Override
+    public int compareTo(CustomerDao another) {
+        return this.pinyin.compareTo(another.pinyin);
     }
 
     @Generated(hash = 461357872)
     public CustomerDao() {
     }
 
-    @Generated(hash = 509557247)
-    public CustomerDao(Long id, String name, String phone, String cardId,
-                       String location, String photo_path, String remark, int sex, Date date) {
+    @Generated(hash = 294594259)
+    public CustomerDao(Long id, String name, String phone, String cardId, String location, String photo_path,
+                       String remark, int sex, Date date, String pinyin, boolean buy) {
         this.id = id;
         this.name = name;
         this.phone = phone;
@@ -66,6 +79,8 @@ public class CustomerDao {
         this.remark = remark;
         this.sex = sex;
         this.date = date;
+        this.pinyin = pinyin;
+        this.buy = buy;
     }
 
     public Long getId() {
@@ -82,6 +97,7 @@ public class CustomerDao {
 
     public void setName(String name) {
         this.name = name;
+        this.pinyin = AmUtlis.getPinYin(name);
     }
 
     public String getPhone() {
@@ -153,6 +169,22 @@ public class CustomerDao {
                 ", sex=" + sex +
                 ", date=" + date +
                 '}';
+    }
+
+    public String getPinyin() {
+        return this.pinyin;
+    }
+
+    public void setPinyin(String pinyin) {
+        this.pinyin = pinyin;
+    }
+
+    public boolean getBuy() {
+        return this.buy;
+    }
+
+    public void setBuy(boolean buy) {
+        this.buy = buy;
     }
 
 }

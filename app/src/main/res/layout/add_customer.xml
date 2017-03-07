@@ -129,7 +129,7 @@
                     android:layout_marginTop="10dp"
                     android:background="@null"
                     android:ellipsize="end"
-                    android:hint="请输入身份证"
+                    android:hint="请输入身份证（必填）"
                     android:maxLines="20"
                     android:singleLine="true"
                     android:textCursorDrawable="@drawable/shape_cursor_bg"

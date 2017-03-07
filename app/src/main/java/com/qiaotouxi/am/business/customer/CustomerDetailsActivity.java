@@ -1,14 +1,12 @@
 package com.qiaotouxi.am.business.customer;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
@@ -24,25 +22,23 @@ import com.qiaotouxi.am.App;
 import com.qiaotouxi.am.R;
 import com.qiaotouxi.am.business.dao.CustomerDao;
 import com.qiaotouxi.am.business.dao.CustomerDaoDao;
+import com.qiaotouxi.am.business.dao.DaoUtils;
 import com.qiaotouxi.am.framework.base.BaseActivity;
 import com.qiaotouxi.am.framework.base.Constant;
 import com.qiaotouxi.am.framework.utils.AmUtlis;
 import com.qiaotouxi.am.framework.utils.BitmapUtils;
 import com.qiaotouxi.am.framework.view.PhotoPop;
 
-import java.util.Date;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * @Created by zmy.
- * @Date 2017/3/1 0001.
- * 添加客户页面
+ * @Date 2017/3/7 0007.
+ * 客户资料详情页面
  */
 
-public class AddCustomerActivity extends BaseActivity implements View.OnClickListener {
-
+public class CustomerDetailsActivity extends BaseActivity implements View.OnClickListener {
     @BindView(R.id.tv_title)
     TextView tvTitle;
     @BindView(R.id.img_tx)
@@ -57,12 +53,14 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
     EditText etLocation;
     @BindView(R.id.et_bzxx)
     EditText etBzxx;
-    @BindView(R.id.rb_female)
-    RadioButton rbFemale;
     @BindView(R.id.rb_male)
     RadioButton rbMale;
+    @BindView(R.id.rb_female)
+    RadioButton rbFemale;
     @BindView(R.id.radioGroup)
     RadioGroup radioGroup;
+    @BindView(R.id.line)
+    View line;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.ll_buy_list)
@@ -71,26 +69,46 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
     Button btnSave;
     @BindView(R.id.btn_delete)
     Button btnDelete;
-
-    /**
-     * 拍照返回图片路径
-     */
-    private String imgPath;
+    CustomerDao mCustomerDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_customer);
         ButterKnife.bind(this);
-        initView();
+        mCustomerDao = DaoUtils.getCustomerByID(CustomerDetailsActivity.this, getIntent().getStringExtra(Constant.CUSTMER_ID));
+        initViewData();
     }
 
     /**
-     * 初始化view 点击事件等
+     * 初始化view 及 data
      */
-    private void initView() {
+    private void initViewData() {
+        //设置照片 及 基本信息
+        String path = mCustomerDao.getPhoto_path();
+        if (!TextUtils.isEmpty(path)) {
+            imgPath = path;
+            Bitmap bitmap = BitmapUtils.getDiskBitmap(path);
+            imgTx.setImageBitmap(bitmap);
+        }
+        etName.setText(mCustomerDao.getName());
+        etPhone.setText(mCustomerDao.getPhone());
+        etCardID.setText(mCustomerDao.getCardId());
+        etLocation.setText(mCustomerDao.getLocation());
+        etBzxx.setText(mCustomerDao.getRemark());
+        if (mCustomerDao.getSex() == 0) {
+            rbFemale.setChecked(true);
+            rbMale.setChecked(false);
+        } else {
+            rbFemale.setChecked(false);
+            rbMale.setChecked(true);
+        }
+
+        btnDelete.setVisibility(View.VISIBLE);
         imgTx.setOnClickListener(this);
+        btnDelete.setOnClickListener(this);
         btnSave.setOnClickListener(this);
+
 
     }
 
@@ -101,12 +119,39 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
                 PhotoPop.getInstance().showPop(this);
                 break;
             case R.id.btn_save:
-
                 saveData();
+                break;
+            case R.id.btn_delete:
+                delete();
                 break;
 
         }
     }
+
+    /**
+     * 删除客户
+     */
+    private void delete() {
+
+        if (mCustomerDao.getBuy()) {
+            AmUtlis.showToast("该用户已购买设备，无法删除");
+            return;
+        }
+
+        boolean b = DaoUtils.deleteCustomer(CustomerDetailsActivity.this, mCustomerDao);
+        if (b) {
+            AmUtlis.showToast("删除成功");
+            AmUtlis.refreshCustomerManageData();
+            finish();
+        } else {
+            AmUtlis.showToast("删除失败");
+        }
+    }
+
+    /**
+     * 拍照返回图片路径
+     */
+    private String imgPath;
 
     /**
      * 保存客户数据
@@ -128,10 +173,10 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
             return;
         }
         String cardId = etCardID.getText().toString();
-//        if(TextUtils.isEmpty(cardId)){
-//            AmUtlis.showToast("请填写身份证号码");
-//            return;
-//        }
+        if (TextUtils.isEmpty(cardId)) {
+            AmUtlis.showToast("请填写身份证号码");
+            return;
+        }
         String location = etLocation.getText().toString();
 //        if(TextUtils.isEmpty(cardId)){
 //            AmUtlis.showToast("请填写联系地址");
@@ -155,29 +200,25 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
                 sex = 1;
             }
         }
-        CustomerDao dao = new CustomerDao(name, phone, cardId, location, imgPath, bzxx, sex, false, new Date());
-        CustomerDaoDao customerDaoDao = App.getDaoSession(this).getCustomerDaoDao();
+        CustomerDaoDao dao = App.getDaoSession(this).getCustomerDaoDao();
 
-        CustomerDao unique = customerDaoDao.queryRawCreate("where CARD_ID=? order by CARD_ID", cardId).unique();
-
+        CustomerDao unique = dao.queryRawCreate("where CARD_ID=? order by CARD_ID", cardId).unique();
         if (unique != null && unique.getCardId().equals(cardId)) {
-            //保存前根据填写的身份证号码，查询数据库， 如果存在此会员，提示身份证重复
-            AmUtlis.showToast("该身份证已被注册，请修改");
-            return;
-        }
-        try {
-            customerDaoDao.insert(dao);
-            AmUtlis.showToast("添加成功");
+            //更新数据
+            unique.setPhoto_path(imgPath);
+            unique.setName(name);
+            unique.setPhone(phone);
+            unique.setRemark(bzxx);
+            unique.setSex(sex);
+            unique.setLocation(location);
+            dao.update(unique);
+            AmUtlis.showToast("保存成功");
             AmUtlis.refreshCustomerManageData();
-            finish();
-        } catch (Exception e) {
-            AmUtlis.showToast("添加失败");
-//            App.getDaoSession(this).getCustomerDaoDao().update(dao);
+        } else {
+            AmUtlis.showToast("保存失败");
         }
-
 
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -209,36 +250,4 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
         }
 
     }
-
-
-    /**
-     * 请求权限后的回调。
-     *
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        switch (requestCode) {
-            case Constant.PERMISSION_PHONE:
-                if (grantResults == null || grantResults.length < 1) {
-                    //用户取消授权
-                    AmUtlis.showToast(" 授权失败");
-                    return;
-                }
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //用户授权 再次检测
-                    PhotoPop.getInstance().checkCameraOrSDCradPermission();
-                } else {
-                    //用户取消授权
-                    AmUtlis.showToast("你必须授权，才能进行下一步");
-                }
-                break;
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-
 }

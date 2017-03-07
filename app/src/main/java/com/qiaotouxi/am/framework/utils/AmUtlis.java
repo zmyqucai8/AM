@@ -1,5 +1,6 @@
 package com.qiaotouxi.am.framework.utils;
 
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
@@ -13,13 +14,27 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.AnticipateInterpolator;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.qiaotouxi.am.App;
 import com.qiaotouxi.am.R;
+import com.qiaotouxi.am.business.customer.CostomerManageEvent;
+import com.qiaotouxi.am.business.equipment.EquipmentManageCountEvent;
 import com.qiaotouxi.am.business.equipment.EquipmentManageEvent;
 import com.qiaotouxi.am.framework.base.Constant;
+
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
@@ -275,6 +290,71 @@ public class AmUtlis {
         return tv;
     }
 
+    /**
+     * 指定字符进行切割
+     *
+     * @param str_char
+     * @param str
+     * @return
+     */
+    public static List<String> splitStringByChar(String str_char, String str) {
+        List<String> chars = new ArrayList<String>();
+        if (str != null) {
+            if (str.contains(str_char)) {
+                String[] strarray = str.split("[" + str_char + "]");
+                for (int i = 0; i < strarray.length; i++) {
+                    chars.add(strarray[i]);
+                }
+
+            } else {
+                chars.add(str);
+            }
+        }
+        return chars;
+    }
+
+    /**
+     * 获取拼音
+     *
+     * @param text
+     * @return
+     */
+    public static String getPinYin(String text) {
+        char[] chars = text.toCharArray();
+
+        StringBuilder sb = new StringBuilder();
+
+        HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
+
+        //取消音调
+        format.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+        //大写
+        format.setCaseType(HanyuPinyinCaseType.UPPERCASE);
+
+        for (char ch : chars) {
+            if (Character.isWhitespace(ch)) {
+                //如果是空格
+                continue;
+            }
+
+            if (ch > 128 || ch < -127) {
+                try {
+                    //数组是有多音字
+                    String[] array = PinyinHelper.toHanyuPinyinStringArray(ch, format);
+                    sb.append(array[0]);
+
+                } catch (BadHanyuPinyinOutputFormatCombination e) {
+                    e.getMessage();
+                }
+            } else {
+                //#$%^
+                return "#";
+            }
+        }
+
+        return sb.toString();
+
+    }
 
     /**
      * 启动一个缩放动画， 用在 主界面 底部tab点击选中时
@@ -287,6 +367,58 @@ public class AmUtlis {
     }
 
     /**
+     * 获取系统当前时间 2017年3月7日18:01:04
+     */
+    public static String getYMD() {
+        return new SimpleDateFormat("yyyy年MM月dd日　HH:mm:ss").format(new Date(System.currentTimeMillis()));
+    }
+
+
+    /**
+     * scrollView  3s滚动到底部
+     *
+     * @param scrollView
+     */
+    public static void scrollViewToButtom(final ScrollView scrollView) {
+        ValueAnimator valueAnm = new ValueAnimator();
+        valueAnm.setIntValues(0, scrollView.getHeight());
+        valueAnm.setDuration(3000);
+        valueAnm.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int value = (int) animation.getAnimatedValue();
+                scrollView.scrollTo(0, value);
+            }
+        });
+        valueAnm.start();
+    }
+
+    /**
+     * 设置角标数量显示及隐藏
+     * 大于0小于100 正常显示
+     * 大于100 显示99
+     * 不满足条件则隐藏
+     *
+     * @param number   消息数量
+     * @param textView textview
+     */
+    public static void setBadgerCount(TextView textView, int number) {
+        if (number > 0 && number < 100) { //大于0小于100 正常显示
+            textView.setVisibility(View.VISIBLE);
+            if (number < 10) {
+                textView.setText(" " + String.valueOf(number) + " ");
+            } else
+                textView.setText(String.valueOf(number));
+        } else if (number > 100) {//大于100 显示99
+            textView.setVisibility(View.VISIBLE);
+            textView.setText(String.valueOf(99));
+        } else {   //不满足条件隐藏
+            textView.setVisibility(View.GONE);
+        }
+    }
+
+
+    /**
      * 发送event刷新设备管理数据
      *
      * @type EQUIPMENT_SOLD_NO  EQUIPMENT_SOLD_Yes
@@ -296,5 +428,27 @@ public class AmUtlis {
         event.type = type;
         EventBus.getDefault().post(event);
     }
+
+    /**
+     * 发送event刷新客户管理
+     */
+    public static void refreshCustomerManageData() {
+        CostomerManageEvent event = new CostomerManageEvent();
+        EventBus.getDefault().post(event);
+    }
+
+    /**
+     * 发送event刷新设备管理 ，已出售和未出售总数角标 ， 在获取数据后
+     *
+     * @param count 数量
+     * @type 类型  EQUIPMENT_SOLD_NO  EQUIPMENT_SOLD_Yes
+     */
+    public static void refreshEquipmentManageCount(int type, int count) {
+        EquipmentManageCountEvent event = new EquipmentManageCountEvent();
+        event.type = type;
+        event.count = count;
+        EventBus.getDefault().post(event);
+    }
+
 
 }

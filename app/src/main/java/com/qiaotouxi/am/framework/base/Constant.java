@@ -42,4 +42,31 @@ public class Constant {
      * 设备未出售
      */
     public static final int EQUIPMENT_SOLD_NO = 0;
+    /**
+     * 设备管理刷新
+     */
+    public static final int EQUIPMENT_ALL = -1;
+
+    /**
+     * 设备id传递的name
+     */
+    public static final String EQUIPMENT_ID = "equipment_id";
+
+    /**
+     * 客户id传递的name
+     */
+    public static final String CUSTMER_ID = "custmer_id";
+
+    /**
+     * 页面跳转之前的类型，用于操作刷新具体页面
+     * 0=未出售设备
+     * 1=已出售设备
+     */
+    public static final String START_TYPE = "start_type";
+
+    /**
+     * 跳转客户选择的rquestCode
+     */
+    public static final int CUSTMER_SELECT_REQUEST_CODE = 105;
+
 }

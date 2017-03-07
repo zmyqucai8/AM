@@ -1,13 +1,16 @@
 package com.qiaotouxi.am.business.equipment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.qiaotouxi.am.R;
 import com.qiaotouxi.am.business.dao.EquipmentDao;
+import com.qiaotouxi.am.framework.base.Constant;
 import com.qiaotouxi.am.framework.utils.BitmapUtils;
 
 import java.util.List;
@@ -24,15 +27,17 @@ public class EquipmentSoldAdapter extends BaseQuickAdapter<EquipmentDao, BaseVie
 
 
     Context mContext;
+    List<EquipmentDao> mData;
 
     public EquipmentSoldAdapter(Context context, List<EquipmentDao> data) {
         super(R.layout.item_equipment, data);
         this.mContext = context;
+        this.mData = data;
 
     }
 
     @Override
-    protected void convert(BaseViewHolder holder, EquipmentDao bean) {
+    protected void convert(final BaseViewHolder holder, final EquipmentDao bean) {
 
         //基本信息
         holder
@@ -53,9 +58,9 @@ public class EquipmentSoldAdapter extends BaseQuickAdapter<EquipmentDao, BaseVie
 
         //设置照片
         String photo_list = bean.getPhoto_list();
-        if (TextUtils.isEmpty(photo_list)) {
-            return;
-        }
+        if (!TextUtils.isEmpty(photo_list)) {
+
+
         String imgPath;
         try {
             //如果出现异常， 说明切割字符串出现问题，表示只有一张图片
@@ -66,6 +71,18 @@ public class EquipmentSoldAdapter extends BaseQuickAdapter<EquipmentDao, BaseVie
 
         Bitmap bitmap = BitmapUtils.getDiskBitmap(imgPath);
         holder.setImageBitmap(R.id.img_tx, bitmap);
+        }
+        //设置点击事件, 根据出售状态
+        holder.getConvertView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, EquipmentDetailsActivity.class);
+                intent.putExtra(Constant.EQUIPMENT_ID, getData().get(holder.getAdapterPosition()).getEngine_id());
+                intent.putExtra(Constant.START_TYPE, getData().get(holder.getAdapterPosition()).getSell() ? Constant.EQUIPMENT_SOLD_YES : Constant.EQUIPMENT_SOLD_NO);
+                mContext.startActivity(intent);
+            }
+        });
+
 
     }
 }

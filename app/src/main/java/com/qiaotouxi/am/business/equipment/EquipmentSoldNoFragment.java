@@ -11,12 +11,16 @@ import android.view.ViewGroup;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qiaotouxi.am.R;
 import com.qiaotouxi.am.business.dao.DaoUtils;
+import com.qiaotouxi.am.business.dao.EquipmentDao;
 import com.qiaotouxi.am.framework.base.BaseFragment;
 import com.qiaotouxi.am.framework.base.Constant;
 import com.qiaotouxi.am.framework.utils.AmUtlis;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 
 /**
  * @Created by zmy.
@@ -34,12 +38,13 @@ public class EquipmentSoldNoFragment extends BaseFragment {
     protected View initView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.equipment_sold_no, container, false);
         ButterKnife.bind(this, rootView);
+        EventBus.getDefault().register(this);
         return rootView;
     }
 
     @Override
     protected void initData() {
-        mAdapter = new EquipmentSoldAdapter(getActivity(), DaoUtils.getEquipmentSoldNoData(getActivity()));
+        mAdapter = new EquipmentSoldAdapter(getActivity(), getEquipmentSoldNoData());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAdapter.isFirstOnly(true);
         mAdapter.openLoadAnimation(BaseQuickAdapter.SCALEIN);
@@ -55,18 +60,36 @@ public class EquipmentSoldNoFragment extends BaseFragment {
      * @param event
      */
     public void onEventMainThread(EquipmentManageEvent event) {
-        if (event.type == Constant.EQUIPMENT_SOLD_NO) {
+        if (event.type == Constant.EQUIPMENT_SOLD_NO || event.type == Constant.EQUIPMENT_ALL) {
             AmUtlis.showLog("evnet 刷新未出售列表");
             refreshData();
         }
     }
 
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
     /**
      * 刷新数据的方法
      */
     public void refreshData() {
-        mAdapter.setNewData(DaoUtils.getEquipmentSoldNoData(getActivity()));
+        mAdapter.setNewData(getEquipmentSoldNoData());
+        mRecyclerView.scrollToPosition(mAdapter.getItemCount());
+    }
+
+    /**
+     * 获取未出售数据，并且刷新数量角标
+     *
+     * @return
+     */
+    private List<EquipmentDao> getEquipmentSoldNoData() {
+        List<EquipmentDao> listData = DaoUtils.getEquipmentSoldNoData(getActivity());
+        AmUtlis.refreshEquipmentManageCount(Constant.EQUIPMENT_SOLD_NO, listData.size());
+        return listData;
     }
 
 

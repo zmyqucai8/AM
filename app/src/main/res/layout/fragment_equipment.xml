@@ -40,6 +40,28 @@
     </LinearLayout>
 
 
+    <TextView
+        android:id="@+id/tv_wcs_count"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/shape_rund_bg"
+        android:textColor="@color/white"
+        android:text="45"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_ycs_count"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="35dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/shape_rund_bg"
+        android:textColor="@color/white"
+        android:text="45"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <FrameLayout
         android:id="@+id/fragments"
         android:layout_width="match_parent"

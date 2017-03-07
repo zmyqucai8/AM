@@ -34,11 +34,15 @@ public abstract class BaseFragment extends Fragment {
     /**
      * 加载数据
      */
-    protected abstract void initData();
+    protected abstract void initData(
+
+    );
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initData();
     }
+
+
 }

@@ -81,16 +81,11 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
     private void initView() {
 
 
-        mAdapter = new AddEquipmentPhotoAdapter(this, mImgPathList);
-//        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mAdapter = new AddEquipmentPhotoAdapter(this, mImgPathList, 0);
         // 设置布局管理器
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
-//        mAdapter.setOnLoadMoreListener(this);
-//        mAdapter.setLoadMoreView(new RecyclerViewLoadMoreView());
-//        mAdapter.isFirstOnly(true);
-//        mAdapter.openLoadAnimation(BaseQuickAdapter.SCALEIN);
         mAdapter.setEmptyView(AmUtlis.getEmptyView(this, "请点击上方添加按钮添加照片"));
         mRecyclerView.setAdapter(mAdapter);
         tv_add_photo.setTypeface(AmUtlis.getTTF());
