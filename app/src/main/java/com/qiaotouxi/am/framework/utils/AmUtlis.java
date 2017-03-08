@@ -18,6 +18,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bigkoo.alertview.AlertView;
+import com.bigkoo.alertview.OnDismissListener;
+import com.bigkoo.alertview.OnItemClickListener;
 import com.qiaotouxi.am.App;
 import com.qiaotouxi.am.R;
 import com.qiaotouxi.am.business.customer.CostomerManageEvent;
@@ -450,5 +453,40 @@ public class AmUtlis {
         EventBus.getDefault().post(event);
     }
 
+
+    //显示提示框的限制
+    public static boolean isShowAlert = true;
+    public static AlertView alertView;
+
+    /**
+     * 关闭页面的提示
+     */
+    public static void showAlertView(final Activity context, OnItemClickListener listener) {
+        if (isShowAlert) {
+            isShowAlert = false;
+            if (alertView == null) {
+                alertView = new AlertView.Builder().setContext(context)
+                        .setStyle(AlertView.Style.Alert)
+                        .setTitle("温馨提示")
+                        .setMessage("你还未保存信息，是否确认退出？")
+                        .setCancelText("取消")
+                        .setDestructive("确定")
+                        .setOthers(null)
+                        .setOnItemClickListener(listener)
+                        .build();
+
+            }
+            alertView.setOnDismissListener(new OnDismissListener() {
+                @Override
+                public void onDismiss(Object o) {
+                    AmUtlis.showLog("dismiss");
+                    isShowAlert = true;
+                }
+            });
+            alertView.show();
+
+
+        }
+    }
 
 }

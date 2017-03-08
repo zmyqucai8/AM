@@ -3,6 +3,8 @@ package com.qiaotouxi.am.business.customer;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,11 +56,22 @@ public class CustomerManageAdapter extends RecyclerView.Adapter<CustomerManageAd
     //条目文本填充 及点击事件
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int i) {
-        viewHolder.item.setText(mListData.get(i).getName());
+        String name = mListData.get(i).getName();
+        String phone = mListData.get(i).getPhone();
+        if (!TextUtils.isEmpty(highlightText) && name.contains(highlightText)) {
+            String html = "<font color='red'>" + highlightText + "</font>";
+            html = name.replaceFirst(highlightText, html);
+            html = "<font>" + html + "</font>";
+            viewHolder.item.setText(Html.fromHtml(html));
+        } else if (!TextUtils.isEmpty(highlightText) && phone.contains(highlightText)) {
+            viewHolder.item.setText(Html.fromHtml("<font color='blue'>" + name + "</font>"));
+        } else {
+            viewHolder.item.setText(name);
+        }
+
         viewHolder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (isSelect) {
                     Intent intent = new Intent();
                     intent.putExtra(Constant.CUSTMER_ID, mListData.get(i).getCardId());
@@ -146,13 +159,18 @@ public class CustomerManageAdapter extends RecyclerView.Adapter<CustomerManageAd
 
     }
 
+    // 被搜索的文字
+    private String highlightText = "";
+
     /**
      * 设置新数据
      *
      * @param data
+     * @param str  如果不为null，说明是搜索后天就新数据，被搜索字段要高亮显示
      */
-    public void setNewData(List<CustomerDao> data) {
+    public void setNewData(List<CustomerDao> data, String str) {
         this.mListData = (List) (data == null ? new ArrayList() : data);
+        this.highlightText = str;
         this.notifyDataSetChanged();
     }
 }

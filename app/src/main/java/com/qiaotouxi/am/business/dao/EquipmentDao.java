@@ -6,8 +6,6 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
 import org.greenrobot.greendao.annotation.Property;
 
-import java.util.Date;
-
 /**
  * @Created by zmy.
  * @Date 2017/3/6 0006.
@@ -39,28 +37,10 @@ public class EquipmentDao {
     @Property(nameInDb = "PAYMENT")
     private boolean payment;//是否付款
     @Property(nameInDb = "DATE")
-    private Date date;  //购机日期
+    private String date;  //购机日期
+    @Property(nameInDb = "CARD_ID")
+    private String card_id;  //购机者id sell=true时才有值
 
-    @Generated(hash = 1193611033)
-    public EquipmentDao(Long id, String photo_list, String name, String brand,
-                        String engine_id, String manufacturer, String factory_id, String remark,
-                        boolean sell, boolean payment, Date date) {
-        this.id = id;
-        this.photo_list = photo_list;
-        this.name = name;
-        this.brand = brand;
-        this.engine_id = engine_id;
-        this.manufacturer = manufacturer;
-        this.factory_id = factory_id;
-        this.remark = remark;
-        this.sell = sell;
-        this.payment = payment;
-        this.date = date;
-    }
-
-    @Generated(hash = 775307577)
-    public EquipmentDao() {
-    }
 
     public Long getId() {
         return this.id;
@@ -142,17 +122,17 @@ public class EquipmentDao {
         this.payment = payment;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return this.date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
     public EquipmentDao(String photo_list, String name, String brand,
                         String engine_id, String manufacturer, String factory_id, String remark,
-                        boolean sell, boolean payment, Date date) {
+                        boolean sell, boolean payment, String date, String card_id) {
         this.photo_list = photo_list;
         this.name = name;
         this.brand = brand;
@@ -163,6 +143,28 @@ public class EquipmentDao {
         this.sell = sell;
         this.payment = payment;
         this.date = date;
+    }
+
+    @Generated(hash = 1295318534)
+    public EquipmentDao(Long id, String photo_list, String name, String brand, String engine_id,
+                        String manufacturer, String factory_id, String remark, boolean sell, boolean payment,
+                        String date, String card_id) {
+        this.id = id;
+        this.photo_list = photo_list;
+        this.name = name;
+        this.brand = brand;
+        this.engine_id = engine_id;
+        this.manufacturer = manufacturer;
+        this.factory_id = factory_id;
+        this.remark = remark;
+        this.sell = sell;
+        this.payment = payment;
+        this.date = date;
+        this.card_id = card_id;
+    }
+
+    @Generated(hash = 775307577)
+    public EquipmentDao() {
     }
 
     @Override
@@ -180,5 +182,13 @@ public class EquipmentDao {
                 ", payment=" + payment +
                 ", date=" + date +
                 '}';
+    }
+
+    public String getCard_id() {
+        return this.card_id;
+    }
+
+    public void setCard_id(String card_id) {
+        this.card_id = card_id;
     }
 }

@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
@@ -18,16 +19,21 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qiaotouxi.am.App;
 import com.qiaotouxi.am.R;
 import com.qiaotouxi.am.business.dao.CustomerDao;
 import com.qiaotouxi.am.business.dao.CustomerDaoDao;
 import com.qiaotouxi.am.business.dao.DaoUtils;
+import com.qiaotouxi.am.business.dao.EquipmentDao;
+import com.qiaotouxi.am.business.equipment.EquipmentSoldAdapter;
 import com.qiaotouxi.am.framework.base.BaseActivity;
 import com.qiaotouxi.am.framework.base.Constant;
 import com.qiaotouxi.am.framework.utils.AmUtlis;
 import com.qiaotouxi.am.framework.utils.BitmapUtils;
 import com.qiaotouxi.am.framework.view.PhotoPop;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,7 +68,7 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
     @BindView(R.id.line)
     View line;
     @BindView(R.id.recyclerView)
-    RecyclerView recyclerView;
+    RecyclerView mRecyclerView;
     @BindView(R.id.ll_buy_list)
     LinearLayout llBuyList;
     @BindView(R.id.btn_save)
@@ -80,10 +86,13 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
         initViewData();
     }
 
+    EquipmentSoldAdapter mAdapter;
+
     /**
      * 初始化view 及 data
      */
     private void initViewData() {
+        tvTitle.setText("客户资料");
         //设置照片 及 基本信息
         String path = mCustomerDao.getPhoto_path();
         if (!TextUtils.isEmpty(path)) {
@@ -105,6 +114,18 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
         }
 
         btnDelete.setVisibility(View.VISIBLE);
+
+        //设置购机历史记录。 如果有的话
+        String engine_id_list = mCustomerDao.getEngine_id_list();
+        if (!TextUtils.isEmpty(engine_id_list)) {
+            List<EquipmentDao> equipmentByIDs = DaoUtils.getEquipmentByIDs(CustomerDetailsActivity.this, engine_id_list);
+            mAdapter = new EquipmentSoldAdapter(CustomerDetailsActivity.this, equipmentByIDs);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(CustomerDetailsActivity.this));
+            mAdapter.isFirstOnly(true);
+            mAdapter.openLoadAnimation(BaseQuickAdapter.SCALEIN);
+            mRecyclerView.setAdapter(mAdapter);
+            mRecyclerView.setVisibility(View.VISIBLE);
+        }
         imgTx.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
         btnSave.setOnClickListener(this);

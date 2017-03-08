@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.bigkoo.alertview.OnItemClickListener;
 import com.qiaotouxi.am.App;
 import com.qiaotouxi.am.R;
 import com.qiaotouxi.am.business.dao.EquipmentDao;
@@ -28,7 +29,6 @@ import com.qiaotouxi.am.framework.utils.BitmapUtils;
 import com.qiaotouxi.am.framework.view.PhotoPop;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -102,9 +102,7 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
                 PhotoPop.getInstance().showPop(this);
                 break;
             case R.id.btn_save:
-
-                save();
-
+                save(false, false, "");
                 break;
 
         }
@@ -114,10 +112,10 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
     /**
      * 保存设备
      */
-    private void save() {
+    private void save(boolean sell, boolean payment, String card_id) {
 
-        if (mImgPathList.size() < 1) {
-            AmUtlis.showToast("请至少添加一张设备照片");
+        if (mImgPathList.size() < 3) {
+            AmUtlis.showToast("请至少添加3张设备照片");
             return;
         }
 
@@ -168,7 +166,7 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
 //        }
 
 
-        EquipmentDao dao = new EquipmentDao(photo_list, name, pinpai, fdjbh, changjia, ccbh, bzxx, false, false, new Date());
+        EquipmentDao dao = new EquipmentDao(photo_list, name, pinpai, fdjbh, changjia, ccbh, bzxx, sell, payment, "", card_id);
 
         EquipmentDaoDao equipmentDaoDao = App.getDaoSession(this).getEquipmentDaoDao();
         try {
@@ -258,4 +256,27 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+
+    @Override
+    public void onBackPressed() {
+
+        //TODO:
+        if (true) {
+            AmUtlis.showAlertView(AddEquipmentActivity.this, new OnItemClickListener() {
+                @Override
+                public void onItemClick(Object o, int position) {
+                    AmUtlis.showLog(position + " = position");
+                    if (position != -1) {
+                        finish();
+                    }
+
+                }
+            });
+
+        } else {
+            super.onBackPressed();
+        }
+
+
+    }
 }

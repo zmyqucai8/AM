@@ -145,6 +145,8 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
         if (mEquipmentDao.getSell()) {
             tvStatus.setBackgroundResource(R.drawable.shape_oval_red_bg);
             tvStatus.setText(mEquipmentDao.getPayment() ? "已付款" : "未付款");
+            rb_pay_yes.setChecked(mEquipmentDao.getPayment());
+            rb_pay_no.setChecked(!mEquipmentDao.getPayment());
             btnSell.setVisibility(View.GONE);
         } else {
             tvStatus.setBackgroundResource(R.drawable.shape_oval_gray_bg);
@@ -159,11 +161,26 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
         etFdjbh.setText(mEquipmentDao.getEngine_id());
         etBzxx.setText(mEquipmentDao.getRemark());
 
+
         tv_add_photo.setOnClickListener(this);
         btnSave.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
         btnSell.setOnClickListener(this);
 
+        if (mEquipmentDao.getSell()) {
+            setSoldYesViewData();
+        }
+
+    }
+
+    /**
+     * 设置已出售状态下的ui
+     */
+    private void setSoldYesViewData() {
+        String card_id = mEquipmentDao.getCard_id();
+        //设置客户信息
+        CustomerDao customer = DaoUtils.getCustomerByID(EquipmentDetailsActivity.this, card_id);
+        setSoldData(customer, true);
     }
 
     @Override
@@ -173,7 +190,7 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
                 PhotoPop.getInstance().showPop(this);
                 break;
             case R.id.btn_save:
-                save();
+                save(false, false, "", "");
                 break;
             case R.id.btn_delete:
                 delete();
@@ -217,10 +234,10 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
     /**
      * 保存设备
      */
-    private void save() {
+    private void save(boolean sell, boolean payment, String card_id, String date) {
 
-        if (mImgPathList.size() < 1) {
-            AmUtlis.showToast("请至少添加一张设备照片");
+        if (mImgPathList.size() < 3) {
+            AmUtlis.showToast("请至少添加3张设备照片");
             return;
         }
         String photo_list;
@@ -275,15 +292,23 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
             unique.setManufacturer(changjia);
             unique.setFactory_id(ccbh);
             unique.setRemark(bzxx);
+            unique.setSell(sell);
+            unique.setCard_id(card_id);
+            unique.setPayment(payment);
+            unique.setDate(date);
             equipmentDaoDao.update(unique);
             AmUtlis.showToast("保存成功");
-            AmUtlis.refreshEquipmentManageData(mStartType);
+            if (sell) {
+                AmUtlis.refreshEquipmentManageData(Constant.EQUIPMENT_SOLD_YES);
+            } else {
+                AmUtlis.refreshEquipmentManageData(mStartType);
+            }
+
+            finish();
         } else {
             AmUtlis.showToast("保存失败");
         }
-//        } catch (Exception e) {
-//            AmUtlis.showToast("保存失败");
-//        }
+
 
     }
 
@@ -326,7 +351,7 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
             CustomerDao customerDao = DaoUtils.getCustomerByID(EquipmentDetailsActivity.this, custmerID);
             AmUtlis.showLog("选择客户返回数据=" + customerDao.toString());
 
-            setSelectData(customerDao);
+            setSoldData(customerDao, false);
 
         }
 
@@ -336,19 +361,33 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
      * 在选择客户返回后，数据处理，显示选择的客户信息
      *
      * @param customerDao
+     * @param isSold      是否已出售状态下设置购机者及订单信息
      */
-    private void setSelectData(CustomerDao customerDao) {
+    private void setSoldData(final CustomerDao customerDao, boolean isSold) {
         //TODO：当选择了客户时候， 应该要设置个临时状态， 在未保存的情况下点击返回出现弹框提示
         ll_gjzxx.setVisibility(View.VISIBLE);
         ll_ddxx.setVisibility(View.VISIBLE);
-        btnSell.setText("重新选择客户");
-        tvTitle.setText("出售设备");
+        if (!isSold) {
+            btnSell.setText("重新选择客户");
+            tvTitle.setText("出售设备");
+            btnSave.setText("确定出售");
+        } else {
+            btnSell.setVisibility(View.GONE);
+        }
+
         btnDelete.setVisibility(View.GONE);
-        btnSave.setText("保存出售");
+
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AmUtlis.showToast("保存出售");
+
+                boolean no = rb_pay_no.isChecked();
+                boolean yes = rb_pay_yes.isChecked();
+                if (!no && !yes) {
+                    AmUtlis.showToast("请选择是否付款");
+                    return;
+                }
+                save(true, yes, customerDao.getCardId(), TextUtils.isEmpty(mEquipmentDao.getDate()) ? AmUtlis.getYMD() : mEquipmentDao.getDate());
             }
         });
         tv_kh_name.setText("姓名　　　　　　" + customerDao.getName());
@@ -358,11 +397,14 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
         tv_kh_location.setText("联系地址　　　　" + customerDao.getLocation());
         tv_kh_sex.setText(customerDao.getSex() == 0 ? "性别　　　　　　女" : "性别　　　　　　男");
         img_tx.setImageBitmap(BitmapUtils.getDiskBitmap(customerDao.getPhoto_path()));
-        tv_date.setText("购机日期　　　　" + AmUtlis.getYMD());
+
+//      if(TextUtils.isEmpty(mEquipmentDao.getDate().toString()))
+
+        tv_date.setText("购机日期　　　　" + mEquipmentDao.getDate());
 
         AmUtlis.showLog("scrollView.getHeight()=" + scrollView.getHeight());
 
-        if (!isScrollViewToButtom) {//自动滚动到底部的处理
+        if (!isScrollViewToButtom && !mEquipmentDao.getSell()) {//自动滚动到底部的处理
             AmUtlis.scrollViewToButtom(scrollView);
             isScrollViewToButtom = !isScrollViewToButtom;
         }

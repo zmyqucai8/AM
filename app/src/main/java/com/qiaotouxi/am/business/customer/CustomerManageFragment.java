@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -115,6 +118,32 @@ public class CustomerManageFragment extends BaseFragment implements View.OnClick
             }
         });
 
+        //文本监听
+        TextWatcher watcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //输入完成后
+                if (s.toString().trim().length() > 0) {
+                    search();
+                } else {
+                    refreshData();
+                }
+
+
+            }
+        };
+        etInput.addTextChangedListener(watcher);
+
     }
 
     /**
@@ -133,7 +162,7 @@ public class CustomerManageFragment extends BaseFragment implements View.OnClick
     private void refreshData() {
         allCustomerData = DaoUtils.getAllCustomerData(getActivity());
         Collections.sort(allCustomerData);
-        adapter.setNewData(allCustomerData);
+        adapter.setNewData(allCustomerData, "");
         setUiShow();
     }
 
@@ -141,11 +170,34 @@ public class CustomerManageFragment extends BaseFragment implements View.OnClick
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_search:
-                AmUtlis.showToast("搜索");
+            case R.id.tv_search: //查找
+//                search();  优化了下代码，改成输入自动查找， 先注释掉此按钮功能，防止重复点击查询数据
                 break;
         }
 
+    }
+
+    /**
+     * 查找客户
+     */
+    private void search() {
+        String str = etInput.getText().toString().trim();
+        List<CustomerDao> customerList;
+        if (!TextUtils.isEmpty(str)) {
+            customerList = DaoUtils.getCustomerByNamePhone(getActivity(), str);
+        } else {
+//            AmUtlis.showToast("请输入姓名或电话");
+            return;
+        }
+        //如果查询到了数据，那么设置数据，刷新ui
+        if (null != customerList && customerList.size() > 0) {
+            allCustomerData.clear();
+            allCustomerData.addAll(customerList);
+            adapter.setNewData(allCustomerData, str);
+            setUiShow();
+        } else {
+//            AmUtlis.showToast("查询不到客户");
+        }
     }
 
     /***

@@ -42,21 +42,11 @@ public class CustomerDao implements Comparable<CustomerDao> {
     @Property(nameInDb = "PINYIN")
     private String pinyin;
     @Property(nameInDb = "BUY")
-    private boolean buy;
+    private boolean buy;//是否购机
 
-    public CustomerDao(String name, String phone, String cardId,
-                       String location, String photo_path, String remark, int sex, boolean buy, Date date) {
-        this.name = name;
-        this.buy = buy;
-        this.phone = phone;
-        this.cardId = cardId;
-        this.location = location;
-        this.photo_path = photo_path;
-        this.remark = remark;
-        this.sex = sex;
-        this.date = date;
-        this.pinyin = AmUtlis.getPinYin(name);
-    }
+    @Property(nameInDb = "ENGINE_ID_LIST")//已购设备id ，分开
+    private String engine_id_list;
+
 
     @Override
     public int compareTo(CustomerDao another) {
@@ -67,9 +57,10 @@ public class CustomerDao implements Comparable<CustomerDao> {
     public CustomerDao() {
     }
 
-    @Generated(hash = 294594259)
-    public CustomerDao(Long id, String name, String phone, String cardId, String location, String photo_path,
-                       String remark, int sex, Date date, String pinyin, boolean buy) {
+    @Generated(hash = 199927924)
+    public CustomerDao(Long id, String name, String phone, String cardId,
+                       String location, String photo_path, String remark, int sex, Date date,
+                       String pinyin, boolean buy, String engine_id_list) {
         this.id = id;
         this.name = name;
         this.phone = phone;
@@ -81,7 +72,9 @@ public class CustomerDao implements Comparable<CustomerDao> {
         this.date = date;
         this.pinyin = pinyin;
         this.buy = buy;
+        this.engine_id_list = engine_id_list;
     }
+
 
     public Long getId() {
         return this.id;
@@ -185,6 +178,14 @@ public class CustomerDao implements Comparable<CustomerDao> {
 
     public void setBuy(boolean buy) {
         this.buy = buy;
+    }
+
+    public String getEngine_id_list() {
+        return this.engine_id_list;
+    }
+
+    public void setEngine_id_list(String engine_id_list) {
+        this.engine_id_list = engine_id_list;
     }
 
 }

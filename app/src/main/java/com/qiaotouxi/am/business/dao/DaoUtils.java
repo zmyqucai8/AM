@@ -3,6 +3,7 @@ package com.qiaotouxi.am.business.dao;
 import android.content.Context;
 
 import com.qiaotouxi.am.App;
+import com.qiaotouxi.am.framework.utils.AmUtlis;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,15 +25,31 @@ public class DaoUtils {
         EquipmentDaoDao daoDao = App.getDaoSession(context).getEquipmentDaoDao();
 //                List<EquipmentDao> list = daoDao.queryRawCreate("where SELL=? order by SELL", false).list();
         List<EquipmentDao> list = daoDao.queryBuilder().list();
+        List<EquipmentDao> listDao = new ArrayList<EquipmentDao>();
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getSell()) {
-                list.remove(i);
+            if (!list.get(i).getSell()) {
+                listDao.add(list.get(i));
             }
 
         }
-        return list;
+        return listDao;
     }
 
+    /**
+     * 获取已出售设备
+     */
+    public static List<EquipmentDao> getEquipmentSoldYesData(Context context) {
+        EquipmentDaoDao daoDao = App.getDaoSession(context).getEquipmentDaoDao();
+        List<EquipmentDao> list = daoDao.queryBuilder().list();
+        List<EquipmentDao> listDao = new ArrayList<EquipmentDao>();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getSell()) {
+                listDao.add(list.get(i));
+            }
+
+        }
+        return listDao;
+    }
 
     /**
      * 删除一个设备
@@ -80,12 +97,63 @@ public class DaoUtils {
     }
 
     /**
+     * 查询设备 根据设备id 即 发动机编号
+     *
+     * @param ids "id1,id2,id3..."
+     */
+    public static List<EquipmentDao> getEquipmentByIDs(Context context, String ids) {
+        List<EquipmentDao> list = new ArrayList<EquipmentDao>();
+        List<String> strings = AmUtlis.splitStringByChar(",", ids);
+        for (int i = 0; i < strings.size(); i++) {
+            list.add(App.getDaoSession(context).getEquipmentDaoDao().queryRawCreate("where ENGINE_ID=? order by ENGINE_ID", strings.get(i)).unique());
+        }
+        return list;
+    }
+
+
+    /**
      * 查询客户 根据客户id 及身份证
      */
     public static CustomerDao getCustomerByID(Context context, String id) {
         return App.getDaoSession(context).getCustomerDaoDao().queryRawCreate("where CARD_ID=? order by CARD_ID", id).unique();
     }
 
+
+    /**
+     * 通过姓名或者电话查询客户信息
+     *
+     * @param context
+     * @param str     可能是name 可能是phone
+     * @return 如果都查询不到 返回一个null 注意判断
+     */
+    public static List<CustomerDao> getCustomerByNamePhone(Context context, String str) {
+//        CustomerDaoDao customerDaoDao = App.getDaoSession(context).getCustomerDaoDao();
+//        CustomerDao nameUnique = customerDaoDao.queryRawCreate("where NAME=? order by NAME", str).unique();
+//        if (nameUnique != null && nameUnique.getName().equals(str)) {
+//            return nameUnique;
+//        } else {
+//            CustomerDao phoneUnique = customerDaoDao.queryRawCreate("where PHONE=? order by PHONE", str).unique();
+//            if (phoneUnique != null && phoneUnique.getPhone().equals(str)) {
+//                return phoneUnique;
+//            } else {
+//                return null;
+//            }
+//        }
+        //模糊匹配查询,只要包含就显示
+        List<CustomerDao> allCustomerData = getAllCustomerData(context);
+        List<CustomerDao> list = new ArrayList<CustomerDao>();
+        for (int i = 0; i < allCustomerData.size(); i++) {
+            CustomerDao dao = allCustomerData.get(i);
+            String phone = dao.getPhone();
+            String name = dao.getName();
+            if (name.contains(str)) {
+                list.add(dao);
+            } else if (phone.contains(str) && str.length() > 2) {//如果输入电话 长度必须大于2才开始匹配
+                list.add(dao);
+            }
+        }
+        return list;
+    }
 
     /**
      * 获取所有客户数据

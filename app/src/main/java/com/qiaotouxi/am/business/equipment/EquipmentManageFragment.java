@@ -147,6 +147,16 @@ public class EquipmentManageFragment extends BaseFragment implements View.OnClic
 
     }
 
+    /**
+     * 数据刷新，切换选中
+     *
+     * @param event
+     */
+    public void onEventMainThread(EquipmentManageEvent event) {
+        AmUtlis.showLog("evnet 切换tab " + event.type);
+//        setFragment(event.type);
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

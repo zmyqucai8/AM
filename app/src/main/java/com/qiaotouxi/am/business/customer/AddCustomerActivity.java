@@ -47,6 +47,8 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
     TextView tvTitle;
     @BindView(R.id.img_tx)
     ImageView imgTx;
+    @BindView(R.id.tv_khzl)
+    TextView tv_khzl;
     @BindView(R.id.et_name)
     EditText etName;
     @BindView(R.id.et_phone)
@@ -89,6 +91,7 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
      * 初始化view 点击事件等
      */
     private void initView() {
+        tv_khzl.requestFocus();
         imgTx.setOnClickListener(this);
         btnSave.setOnClickListener(this);
 
@@ -101,7 +104,6 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
                 PhotoPop.getInstance().showPop(this);
                 break;
             case R.id.btn_save:
-
                 saveData();
                 break;
 
@@ -168,9 +170,7 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
         dao.setPinyin(AmUtlis.getPinYin(name));
         dao.setDate(new Date());
         CustomerDaoDao customerDaoDao = App.getDaoSession(this).getCustomerDaoDao();
-
         CustomerDao unique = customerDaoDao.queryRawCreate("where CARD_ID=? order by CARD_ID", cardId).unique();
-
         if (unique != null && unique.getCardId().equals(cardId)) {
             //保存前根据填写的身份证号码，查询数据库， 如果存在此会员，提示身份证重复
             AmUtlis.showToast("该身份证已被注册，请修改");

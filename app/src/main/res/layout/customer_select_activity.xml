@@ -4,16 +4,33 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-    <TextView
-        android:id="@+id/tv_title"
+    <RelativeLayout
+        android:id="@+id/rl_actionbar"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/colorPrimaryDark"
-        android:gravity="center"
-        android:text="客户选择"
-        android:textColor="@android:color/white"
-        android:textSize="25sp" />
+        android:background="@color/colorPrimaryDark">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="客户选择"
+            android:textColor="@android:color/white"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/tv_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="15dp"
+            android:text="&#xe618;"
+            android:textColor="@drawable/text_white_selector"
+            android:textSize="25sp" />
+    </RelativeLayout>
+
 
     <FrameLayout
         android:id="@+id/fragment_select"

@@ -60,7 +60,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/myrecycler_layout"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@color/transparent"
                 android:scrollbarStyle="outsideOverlay"
@@ -361,6 +361,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:layout_marginBottom="10dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 android:background="@drawable/shape_blue_selector"

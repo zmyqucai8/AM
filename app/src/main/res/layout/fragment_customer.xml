@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/shape_blue_stroke"
             android:gravity="center|left"
-            android:hint="请输入姓名或身份证"
+            android:hint="请输入姓名或电话"
             android:maxLines="1"
             android:singleLine="true"
             android:textCursorDrawable="@drawable/shape_cursor_bg" />
@@ -46,7 +46,7 @@
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:paddingTop="8dp"
-            android:text="搜索"
+            android:text="查找"
             android:textColor="@color/white" />
 
     </RelativeLayout>
