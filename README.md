@@ -34,6 +34,9 @@
 活动——碎片模型简化的用户界面,提高重用性和可扩展性
 
 
+ alias : am
+ password : qiaotouxiam
+ jksFile: am.jks
 
 
 
@@ -72,6 +75,4 @@ Other instructions
 2. The UI
 - the activity - fragments model simplified UI, improve the reuse and extensibility
 
-am
-qiaotouxiam
 
