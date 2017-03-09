@@ -20,6 +20,7 @@ import com.qiaotouxi.am.business.equipment.EquipmentManageFragment;
 import com.qiaotouxi.am.framework.base.BaseActivity;
 import com.qiaotouxi.am.framework.base.Constant;
 import com.qiaotouxi.am.framework.utils.AmUtlis;
+import com.qiaotouxi.am.framework.utils.SPUtils;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -71,7 +72,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        setDefaultData();
+        setDefaultData();
         if (savedInstanceState != null) {
             mEquipmentManage = (EquipmentManageFragment) getFragmentManager().findFragmentByTag("mEquipmentManage");
             mCustomerManage = (CustomerManageFragment) getFragmentManager().findFragmentByTag("mCustomerManage");
@@ -86,7 +87,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      * 设置默认数据， 记得注释代码
      */
     private void setDefaultData() {
-        DaoUtils.testAddCustomer(MainActivity.this);
+
+        if (SPUtils.getisAddData(MainActivity.this)) {
+            DaoUtils.testAddCustomer(MainActivity.this);
+            DaoUtils.testAddEquipmentDao(MainActivity.this);
+            SPUtils.setisAddData(MainActivity.this, false);
+        }
     }
 
     /**

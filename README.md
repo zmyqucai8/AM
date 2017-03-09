@@ -31,3 +31,6 @@ Other instructions
     
 2. The UI
 - the activity - fragments model simplified UI, improve the reuse and extensibility
+
+am
+qiaotouxiam

@@ -185,13 +185,6 @@ public class DaoUtils {
     }
 
 
-
-
-
-
-
-
-
     public static String[] zm = {"张",
             "阿达a",
             "匹配b",
@@ -225,7 +218,7 @@ public class DaoUtils {
     };
 
     /**
-     * 测试方法  批量添加客户
+     * 测试方法  批量向数据库添加客户
      */
     public static void testAddCustomer(Context context) {
         CustomerDaoDao daoDao = App.getDaoSession(context).getCustomerDaoDao();
@@ -237,10 +230,37 @@ public class DaoUtils {
             dao.setLocation("深圳市" + i);
             dao.setSex(58 % 2);
             dao.setRemark("没有备注的咯" + i);
-            dao.setBuy(58 % 2 == 0);
-            dao.setPhoto_path("/storage/emulated/0/AM_IMG/1488876098017.jpg");
+            dao.setBuy(false);
+            dao.setPhoto_path("");
             dao.setDate(new Date());
-            dao.setPhone("15356105-" + i);
+            dao.setPhone("15" + i + System.currentTimeMillis());
+            dao.setEngine_id_list("");
+
+            list.add(dao);
+        }
+        daoDao.insertInTx(list);
+
+    }
+
+
+    /**
+     * 测试方法  批量添加未出售设备
+     */
+    public static void testAddEquipmentDao(Context context) {
+        EquipmentDaoDao daoDao = App.getDaoSession(context).getEquipmentDaoDao();
+        ArrayList<EquipmentDao> list = new ArrayList<EquipmentDao>();
+        for (int i = 0; i < 30; i++) {
+            EquipmentDao dao = new EquipmentDao();
+            dao.setPayment(false);
+            dao.setSell(false);
+            dao.setPhone("");//未出售就没有
+            dao.setRemark(i + "备注信息随便咯");
+            dao.setBrand(i + "品牌也随便");
+            dao.setDate("");
+            dao.setEngine_id(i + "发动机编号" + System.currentTimeMillis() + zm[i]);
+            dao.setFactory_id(i + "生产编号");
+            dao.setManufacturer(i + "厂家");
+            dao.setName(i + "设备名字");
             list.add(dao);
         }
         daoDao.insertInTx(list);
