@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.bigkoo.alertview.OnItemClickListener;
 import com.qiaotouxi.am.App;
 import com.qiaotouxi.am.R;
 import com.qiaotouxi.am.business.dao.EquipmentDao;
@@ -86,7 +85,7 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
-        mAdapter.setEmptyView(AmUtlis.getEmptyView(this, "请点击上方添加按钮添加照片"));
+        mAdapter.setEmptyView(AmUtlis.getEmptyView(this, "请点击上方添加按钮添加3张照片"));
         mRecyclerView.setAdapter(mAdapter);
         tv_add_photo.setTypeface(AmUtlis.getTTF());
         tv_add_photo.setOnClickListener(this);
@@ -140,22 +139,22 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
         }
 
         String pinpai = tvPp.getText().toString();
-        if (TextUtils.isEmpty(name)) {
+        if (TextUtils.isEmpty(pinpai)) {
             AmUtlis.showToast("请填写品牌");
             return;
         }
         String changjia = etCj.getText().toString();
-        if (TextUtils.isEmpty(name)) {
+        if (TextUtils.isEmpty(changjia)) {
             AmUtlis.showToast("请填写厂家");
             return;
         }
         String ccbh = etCcbh.getText().toString();
-        if (TextUtils.isEmpty(name)) {
+        if (TextUtils.isEmpty(ccbh)) {
             AmUtlis.showToast("请填写出厂编号");
             return;
         }
         String fdjbh = etFdjbh.getText().toString();
-        if (TextUtils.isEmpty(name)) {
+        if (TextUtils.isEmpty(fdjbh)) {
             AmUtlis.showToast("请填写发动机编号");
             return;
         }
@@ -259,24 +258,7 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onBackPressed() {
-
-        //TODO:
-        if (true) {
-            AmUtlis.showAlertView(AddEquipmentActivity.this, new OnItemClickListener() {
-                @Override
-                public void onItemClick(Object o, int position) {
-                    AmUtlis.showLog(position + " = position");
-                    if (position != -1) {
-                        finish();
-                    }
-
-                }
-            });
-
-        } else {
-            super.onBackPressed();
-        }
-
+        AmUtlis.showCloseAlert(AddEquipmentActivity.this);
 
     }
 }

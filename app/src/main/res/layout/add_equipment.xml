@@ -119,7 +119,7 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:ellipsize="end"
-                    android:hint="请输入名称"
+                    android:hint="请输入名称（必填）"
                     android:singleLine="true"
                     android:textCursorDrawable="@drawable/shape_cursor_bg"
                     android:textSize="14sp" />
@@ -132,7 +132,7 @@
                     android:layout_marginTop="10dp"
                     android:background="@null"
                     android:ellipsize="end"
-                    android:hint="请输入品牌"
+                    android:hint="请输入品牌（必填）"
                     android:singleLine="true"
                     android:textCursorDrawable="@drawable/shape_cursor_bg"
                     android:textSize="14sp" />
@@ -145,7 +145,7 @@
                     android:layout_marginTop="10dp"
                     android:background="@null"
                     android:ellipsize="end"
-                    android:hint="请输入厂家"
+                    android:hint="请输入厂家（必填）"
                     android:singleLine="true"
                     android:textCursorDrawable="@drawable/shape_cursor_bg"
                     android:textSize="14sp" />
@@ -158,20 +158,19 @@
                     android:layout_marginTop="10dp"
                     android:background="@null"
                     android:ellipsize="end"
-                    android:hint="请输入出厂编号"
+                    android:hint="请输入出厂编号（必填）"
                     android:singleLine="true"
                     android:textCursorDrawable="@drawable/shape_cursor_bg"
                     android:textSize="14sp" />
 
                 <EditText
                     android:id="@+id/et_fdjbh"
-
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:background="@null"
                     android:ellipsize="end"
-                    android:hint="请输入发动机编号"
+                    android:hint="请输入发动机编号（必填）"
                     android:singleLine="true"
                     android:textCursorDrawable="@drawable/shape_cursor_bg"
                     android:textSize="14sp" />

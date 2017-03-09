@@ -107,6 +107,7 @@ public class DaoUtils {
         for (int i = 0; i < strings.size(); i++) {
             list.add(App.getDaoSession(context).getEquipmentDaoDao().queryRawCreate("where ENGINE_ID=? order by ENGINE_ID", strings.get(i)).unique());
         }
+        AmUtlis.showLog("list.sezi=" + list.size());
         return list;
     }
 
@@ -114,8 +115,8 @@ public class DaoUtils {
     /**
      * 查询客户 根据客户id 及身份证
      */
-    public static CustomerDao getCustomerByID(Context context, String id) {
-        return App.getDaoSession(context).getCustomerDaoDao().queryRawCreate("where CARD_ID=? order by CARD_ID", id).unique();
+    public static CustomerDao getCustomerByPhone(Context context, String phone) {
+        return App.getDaoSession(context).getCustomerDaoDao().queryRawCreate("where PHONE=? order by PHONE", phone).unique();
     }
 
 
@@ -172,6 +173,23 @@ public class DaoUtils {
 
 
     }
+
+
+    /**
+     * 更新一个客户资料
+     *
+     * @param dao
+     */
+    public static void updateCustomerDao(Context context, CustomerDao dao) {
+        App.getDaoSession(context).getCustomerDaoDao().update(dao);
+    }
+
+
+
+
+
+
+
 
 
     public static String[] zm = {"张",

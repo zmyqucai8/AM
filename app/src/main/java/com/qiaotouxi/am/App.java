@@ -8,20 +8,22 @@ import android.os.Looper;
 import com.qiaotouxi.am.business.dao.DaoMaster;
 import com.qiaotouxi.am.business.dao.DaoSession;
 
+
 /**
- * Created by Yyyyyyy on 2017/2/28.
+ * @Created by zmy.
+ * @Date 2017/3/1 0006.
+ * 程序入口类
  */
 public class App extends Application {
 
-    private static Context	mContext;
-    private static Handler	mHandler;
-    private static Thread	mMainThread;
-    private static long		mMainThreadId;
-    private static Looper	mMainThreadLooper;
+    private static Context mContext;
+    private static Handler mHandler;
+    private static Thread mMainThread;
+    private static long mMainThreadId;
+    private static Looper mMainThreadLooper;
 
     @Override
-    public void onCreate()
-    {
+    public void onCreate() {
         super.onCreate();
 
         // 程序的入口
@@ -79,28 +81,23 @@ public class App extends Application {
     }
 
 
-    public static Context getContext()
-    {
+    public static Context getContext() {
         return mContext;
     }
 
-    public static Handler getHandler()
-    {
+    public static Handler getHandler() {
         return mHandler;
     }
 
-    public static Thread getMainThread()
-    {
+    public static Thread getMainThread() {
         return mMainThread;
     }
 
-    public static long getMainThreadId()
-    {
+    public static long getMainThreadId() {
         return mMainThreadId;
     }
 
-    public static Looper getMainThreadLooper()
-    {
+    public static Looper getMainThreadLooper() {
         return mMainThreadLooper;
     }
 }

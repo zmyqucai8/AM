@@ -3,6 +3,8 @@ package com.qiaotouxi.am.business.equipment;
 import android.graphics.Bitmap;
 import android.view.View;
 
+import com.bigkoo.alertview.AlertView;
+import com.bigkoo.alertview.OnItemClickListener;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.qiaotouxi.am.R;
@@ -23,6 +25,7 @@ public class AddEquipmentPhotoAdapter extends BaseQuickAdapter<String, BaseViewH
     private AddEquipmentActivity addEquipmentActivity;
     private EquipmentDetailsActivity equipmentDetailsActivity;
 
+    private boolean isShowAlert = true;
     /**
      * 0=添加设备 ，1=设备详情
      */
@@ -54,19 +57,43 @@ public class AddEquipmentPhotoAdapter extends BaseQuickAdapter<String, BaseViewH
                 .setOnClickListener(R.id.img_delete, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (type == 0) {
-                            addEquipmentActivity.mImgPathList.remove(holder.getAdapterPosition());
-                            if (addEquipmentActivity.mImgPathList.size() == 0) {
-                                addEquipmentActivity.mAdapter.setNewData(new ArrayList<String>());
-                            }
-                            addEquipmentActivity.mAdapter.notifyDataSetChanged();
-                        } else if (type == 1) {
-                            equipmentDetailsActivity.mImgPathList.remove(holder.getAdapterPosition());
-                            if (equipmentDetailsActivity.mImgPathList.size() == 0) {
-                                equipmentDetailsActivity.mAdapter.setNewData(new ArrayList<String>());
-                            }
-                            equipmentDetailsActivity.mAdapter.notifyDataSetChanged();
+
+                        if (!isShowAlert) {
+                            return;
                         }
+                        isShowAlert = false;
+                        new AlertView.Builder().setContext(mContext)
+                                .setStyle(AlertView.Style.Alert)
+                                .setTitle("温馨提示")
+                                .setMessage("确定要删除这张照片吗？")
+                                .setCancelText("取消")
+                                .setDestructive("确定")
+                                .setOthers(null)
+                                .setOnItemClickListener(new OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(Object o, int position) {
+                                        isShowAlert = true;
+                                        if (position != -1) {
+                                            //确定删除
+                                            if (type == 0) {
+                                                addEquipmentActivity.mImgPathList.remove(holder.getAdapterPosition());
+                                                if (addEquipmentActivity.mImgPathList.size() == 0) {
+                                                    addEquipmentActivity.mAdapter.setNewData(new ArrayList<String>());
+                                                }
+                                                addEquipmentActivity.mAdapter.notifyDataSetChanged();
+                                            } else if (type == 1) {
+                                                equipmentDetailsActivity.mImgPathList.remove(holder.getAdapterPosition());
+                                                if (equipmentDetailsActivity.mImgPathList.size() == 0) {
+                                                    equipmentDetailsActivity.mAdapter.setNewData(new ArrayList<String>());
+                                                }
+                                                equipmentDetailsActivity.mAdapter.notifyDataSetChanged();
+                                            }
+
+                                        }
+                                    }
+                                })
+                                .build()
+                                .show();
                     }
 
                 });

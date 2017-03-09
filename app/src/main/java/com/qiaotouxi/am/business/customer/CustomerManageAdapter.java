@@ -74,12 +74,12 @@ public class CustomerManageAdapter extends RecyclerView.Adapter<CustomerManageAd
             public void onClick(View v) {
                 if (isSelect) {
                     Intent intent = new Intent();
-                    intent.putExtra(Constant.CUSTMER_ID, mListData.get(i).getCardId());
+                    intent.putExtra(Constant.CUSTMER_PHONE, mListData.get(i).getPhone());
                     activity.setResult(Activity.RESULT_OK, intent);
                     activity.finish();
                 } else {
                     Intent intent = new Intent(activity, CustomerDetailsActivity.class);
-                    intent.putExtra(Constant.CUSTMER_ID, mListData.get(i).getCardId());
+                    intent.putExtra(Constant.CUSTMER_PHONE, mListData.get(i).getPhone());
                     activity.startActivity(intent);
                 }
             }

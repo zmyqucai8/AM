@@ -6,15 +6,8 @@ package com.qiaotouxi.am.business.customer;
  * 刷新设备管理的evnet
  */
 public class CostomerManageEvent {
-    /**
-     *
-     */
-    public int type;
-    /**
-     *
-     */
-    public int count;
 
+    public int type;
     /**
      * 实例对象
      */

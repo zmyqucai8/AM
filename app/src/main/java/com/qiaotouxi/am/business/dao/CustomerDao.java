@@ -23,10 +23,10 @@ public class CustomerDao implements Comparable<CustomerDao> {
     @Property(nameInDb = "NAME")
     private String name;//客户姓名
     @Property(nameInDb = "PHONE")
+    @Index(unique = true)//手机号码作为客户唯一id， 禁止重复
     private String phone;//客户手机
     @Property(nameInDb = "CARD_ID")
-    @Index(unique = true)
-    private String cardId;//客户身份证号码，  此号码作为客户唯一id， 禁止重复
+    private String cardId;//客户身份证号码，
     @Property(nameInDb = "LOCATION")
     private String location;//客户联系地址
     @Property(nameInDb = "PHOTO_PATH")
@@ -37,13 +37,10 @@ public class CustomerDao implements Comparable<CustomerDao> {
     private int sex;//客户性别
     @Property(nameInDb = "DATE")
     private Date date;//date日期 未转
-    //    @Property(nameInDb = "BILL")
-//    private List<String> bll;
     @Property(nameInDb = "PINYIN")
     private String pinyin;
     @Property(nameInDb = "BUY")
     private boolean buy;//是否购机
-
     @Property(nameInDb = "ENGINE_ID_LIST")//已购设备id ，分开
     private String engine_id_list;
 

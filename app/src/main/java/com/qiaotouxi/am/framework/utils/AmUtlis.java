@@ -19,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bigkoo.alertview.AlertView;
-import com.bigkoo.alertview.OnDismissListener;
 import com.bigkoo.alertview.OnItemClickListener;
 import com.qiaotouxi.am.App;
 import com.qiaotouxi.am.R;
@@ -378,14 +377,22 @@ public class AmUtlis {
 
 
     /**
-     * scrollView  3s滚动到底部
+     * scrollView  3s滚动到底部 或底部
      *
+     * @param buttomOrTop ture =顶部 false =底部
      * @param scrollView
      */
-    public static void scrollViewToButtom(final ScrollView scrollView) {
+
+    public static void scrollViewToButtomTop(final ScrollView scrollView, boolean buttomOrTop) {
         ValueAnimator valueAnm = new ValueAnimator();
-        valueAnm.setIntValues(0, scrollView.getHeight());
-        valueAnm.setDuration(3000);
+        if (buttomOrTop) {
+            //从底部滚动到顶部
+            valueAnm.setIntValues(scrollView.getHeight(), 0);
+        } else {
+            //从顶部滚动到底部
+            valueAnm.setIntValues(0, scrollView.getHeight());
+        }
+        valueAnm.setDuration(2500);
         valueAnm.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -395,6 +402,7 @@ public class AmUtlis {
         });
         valueAnm.start();
     }
+
 
     /**
      * 设置角标数量显示及隐藏
@@ -456,37 +464,46 @@ public class AmUtlis {
 
     //显示提示框的限制
     public static boolean isShowAlert = true;
-    public static AlertView alertView;
+
 
     /**
      * 关闭页面的提示
      */
-    public static void showAlertView(final Activity context, OnItemClickListener listener) {
+    public static void showCloseAlert(final Activity context) {
         if (isShowAlert) {
             isShowAlert = false;
-            if (alertView == null) {
-                alertView = new AlertView.Builder().setContext(context)
-                        .setStyle(AlertView.Style.Alert)
-                        .setTitle("温馨提示")
-                        .setMessage("你还未保存信息，是否确认退出？")
-                        .setCancelText("取消")
-                        .setDestructive("确定")
-                        .setOthers(null)
-                        .setOnItemClickListener(listener)
-                        .build();
-
-            }
-            alertView.setOnDismissListener(new OnDismissListener() {
-                @Override
-                public void onDismiss(Object o) {
-                    AmUtlis.showLog("dismiss");
-                    isShowAlert = true;
-                }
-            });
-            alertView.show();
+            new AlertView.Builder().setContext(context)
+                    .setStyle(AlertView.Style.Alert)
+                    .setTitle("温馨提示")
+                    .setMessage("请确认是否已经保存了当前信息\n继续退出请按确定")
+                    .setCancelText("取消")
+                    .setDestructive("确定")
+                    .setOthers(null)
+                    .setOnItemClickListener(new OnItemClickListener() {
+                        @Override
+                        public void onItemClick(Object o, int position) {
+                            isShowAlert = true;
+                            if (position != -1) {
+                                context.finish();
+                            }
+                        }
+                    })
+                    .build()
+                    .show();
 
 
         }
     }
+
+    /**
+     * 照片的提示
+     *
+     * @param context
+     */
+    public static void showPhotoAlert(final Activity context) {
+
+
+    }
+
 
 }

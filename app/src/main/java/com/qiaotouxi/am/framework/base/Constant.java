@@ -55,7 +55,7 @@ public class Constant {
     /**
      * 客户id传递的name
      */
-    public static final String CUSTMER_ID = "custmer_id";
+    public static final String CUSTMER_PHONE = "custmer_phone";
 
     /**
      * 页面跳转之前的类型，用于操作刷新具体页面

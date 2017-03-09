@@ -75,18 +75,19 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
     Button btnSave;
     @BindView(R.id.btn_delete)
     Button btnDelete;
-    CustomerDao mCustomerDao;
+    private CustomerDao mCustomerDao;
+    private EquipmentSoldAdapter mAdapter;
+    private String imgPath;// 拍照返回图片路径
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_customer);
         ButterKnife.bind(this);
-        mCustomerDao = DaoUtils.getCustomerByID(CustomerDetailsActivity.this, getIntent().getStringExtra(Constant.CUSTMER_ID));
+        mCustomerDao = DaoUtils.getCustomerByPhone(CustomerDetailsActivity.this, getIntent().getStringExtra(Constant.CUSTMER_PHONE));
         initViewData();
     }
 
-    EquipmentSoldAdapter mAdapter;
 
     /**
      * 初始化view 及 data
@@ -112,24 +113,23 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
             rbFemale.setChecked(false);
             rbMale.setChecked(true);
         }
-
         btnDelete.setVisibility(View.VISIBLE);
-
         //设置购机历史记录。 如果有的话
         String engine_id_list = mCustomerDao.getEngine_id_list();
         if (!TextUtils.isEmpty(engine_id_list)) {
+            llBuyList.setVisibility(View.VISIBLE);
+            AmUtlis.showLog("engine_id_list=" + engine_id_list);
             List<EquipmentDao> equipmentByIDs = DaoUtils.getEquipmentByIDs(CustomerDetailsActivity.this, engine_id_list);
             mAdapter = new EquipmentSoldAdapter(CustomerDetailsActivity.this, equipmentByIDs);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(CustomerDetailsActivity.this));
             mAdapter.isFirstOnly(true);
             mAdapter.openLoadAnimation(BaseQuickAdapter.SCALEIN);
             mRecyclerView.setAdapter(mAdapter);
-            mRecyclerView.setVisibility(View.VISIBLE);
+
         }
         imgTx.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
         btnSave.setOnClickListener(this);
-
 
     }
 
@@ -169,10 +169,6 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
         }
     }
 
-    /**
-     * 拍照返回图片路径
-     */
-    private String imgPath;
 
     /**
      * 保存客户数据
@@ -194,10 +190,10 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
             return;
         }
         String cardId = etCardID.getText().toString();
-        if (TextUtils.isEmpty(cardId)) {
-            AmUtlis.showToast("请填写身份证号码");
-            return;
-        }
+//        if (TextUtils.isEmpty(cardId)) {
+//            AmUtlis.showToast("请填写身份证号码");
+//            return;
+//        }
         String location = etLocation.getText().toString();
 //        if(TextUtils.isEmpty(cardId)){
 //            AmUtlis.showToast("请填写联系地址");
@@ -223,8 +219,8 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
         }
         CustomerDaoDao dao = App.getDaoSession(this).getCustomerDaoDao();
 
-        CustomerDao unique = dao.queryRawCreate("where CARD_ID=? order by CARD_ID", cardId).unique();
-        if (unique != null && unique.getCardId().equals(cardId)) {
+        CustomerDao unique = dao.queryRawCreate("where PHONE=? order by PHONE", phone).unique();
+        if (unique != null && unique.getPhone().equals(phone)) {
             //更新数据
             unique.setPhoto_path(imgPath);
             unique.setName(name);
@@ -269,6 +265,12 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
             imgPath = BitmapUtils.save(bitmap);
             AmUtlis.showLog("imgPath=" + imgPath);
         }
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        AmUtlis.showCloseAlert(CustomerDetailsActivity.this);
 
     }
 }

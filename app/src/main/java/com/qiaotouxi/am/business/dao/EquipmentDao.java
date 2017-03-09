@@ -13,8 +13,6 @@ import org.greenrobot.greendao.annotation.Property;
  */
 @Entity
 public class EquipmentDao {
-
-
     @Id
     private Long id; //id 自增长
     @Property(nameInDb = "PHOTO_LIST")
@@ -25,7 +23,7 @@ public class EquipmentDao {
     private String brand;//设备品牌
     @Property(nameInDb = "ENGINE_ID")
     @Index(unique = true)
-    private String engine_id;//发动机编号
+    private String engine_id;//发动机编号  作为设备唯一id
     @Property(nameInDb = "MANUFACTURER")
     private String manufacturer;//厂家名称
     @Property(nameInDb = "FACTORY_ID")
@@ -38,8 +36,8 @@ public class EquipmentDao {
     private boolean payment;//是否付款
     @Property(nameInDb = "DATE")
     private String date;  //购机日期
-    @Property(nameInDb = "CARD_ID")
-    private String card_id;  //购机者id sell=true时才有值
+    @Property(nameInDb = "PHONE")
+    private String phone;  //购机者phone sell=true时才有值
 
 
     public Long getId() {
@@ -145,10 +143,15 @@ public class EquipmentDao {
         this.date = date;
     }
 
-    @Generated(hash = 1295318534)
+
+    @Generated(hash = 775307577)
+    public EquipmentDao() {
+    }
+
+    @Generated(hash = 46761151)
     public EquipmentDao(Long id, String photo_list, String name, String brand, String engine_id,
                         String manufacturer, String factory_id, String remark, boolean sell, boolean payment,
-                        String date, String card_id) {
+                        String date, String phone) {
         this.id = id;
         this.photo_list = photo_list;
         this.name = name;
@@ -160,11 +163,7 @@ public class EquipmentDao {
         this.sell = sell;
         this.payment = payment;
         this.date = date;
-        this.card_id = card_id;
-    }
-
-    @Generated(hash = 775307577)
-    public EquipmentDao() {
+        this.phone = phone;
     }
 
     @Override
@@ -184,11 +183,12 @@ public class EquipmentDao {
                 '}';
     }
 
-    public String getCard_id() {
-        return this.card_id;
+    public String getPhone() {
+        return this.phone;
     }
 
-    public void setCard_id(String card_id) {
-        this.card_id = card_id;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
+
 }

@@ -40,7 +40,6 @@ import butterknife.ButterKnife;
  * @Date 2017/3/1 0001.
  * 添加客户页面
  */
-
 public class AddCustomerActivity extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.tv_title)
@@ -106,7 +105,6 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
             case R.id.btn_save:
                 saveData();
                 break;
-
         }
     }
 
@@ -163,6 +161,7 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
         dao.setPhone(phone);
         dao.setCardId(cardId);
         dao.setLocation(location);
+        dao.setEngine_id_list("");
         dao.setPhoto_path(imgPath);
         dao.setRemark(bzxx);
         dao.setSex(sex);
@@ -170,10 +169,10 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
         dao.setPinyin(AmUtlis.getPinYin(name));
         dao.setDate(new Date());
         CustomerDaoDao customerDaoDao = App.getDaoSession(this).getCustomerDaoDao();
-        CustomerDao unique = customerDaoDao.queryRawCreate("where CARD_ID=? order by CARD_ID", cardId).unique();
-        if (unique != null && unique.getCardId().equals(cardId)) {
-            //保存前根据填写的身份证号码，查询数据库， 如果存在此会员，提示身份证重复
-            AmUtlis.showToast("该身份证已被注册，请修改");
+        CustomerDao unique = customerDaoDao.queryRawCreate("where PHONE=? order by PHONE", phone).unique();
+        if (unique != null && unique.getCardId().equals(phone)) {
+            //保存前根据填写的电话号码，查询数据库， 如果存在此会员，提示电话重复
+            AmUtlis.showToast("该电话已被注册，请修改");
             return;
         }
         try {
@@ -183,10 +182,7 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
             finish();
         } catch (Exception e) {
             AmUtlis.showToast("添加失败");
-//            App.getDaoSession(this).getCustomerDaoDao().update(dao);
         }
-
-
     }
 
 
@@ -251,5 +247,9 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+    @Override
+    public void onBackPressed() {
+        AmUtlis.showCloseAlert(AddCustomerActivity.this);
 
+    }
 }
