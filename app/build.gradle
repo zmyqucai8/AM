@@ -48,4 +48,5 @@ dependencies {
     compile 'ca.barrenechea.header-decor:header-decor:0.2.6'
     compile files('libs/pinyin4j-2.5.0.jar')
     compile 'com.bigkoo:alertview:1.0.3'
+    compile project(':mylibrary')
 }

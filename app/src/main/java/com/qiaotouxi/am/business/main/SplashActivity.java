@@ -23,11 +23,11 @@ import butterknife.ButterKnife;
  */
 
 public class SplashActivity extends BaseActivity {
+
     @BindView(R.id.img)
     ImageView img;
     @BindView(R.id.ll_root)
     LinearLayout ll_root;
-
     @BindColor(R.color.text_gray)
     int gray;
     @BindColor(R.color.bg_color)
@@ -59,6 +59,21 @@ public class SplashActivity extends BaseActivity {
      */
     private void setSpalashImg() {
         int flag = new Random().nextInt(1000) % 3;
+        int flag2 = new Random().nextInt(1000) % 3;
+        switch (flag2) {
+            case 0:
+                ll_root.setBackgroundColor(mblue);
+                break;
+            case 1:
+                ll_root.setBackgroundColor(blue);
+                break;
+            case 2:
+                ll_root.setBackgroundColor(red);
+                break;
+            default:
+                ll_root.setBackgroundColor(gray);
+                break;
+        }
         switch (flag) {
             case 0:
                 img.setImageResource(R.drawable.img_splash1);
@@ -74,21 +89,6 @@ public class SplashActivity extends BaseActivity {
                 break;
             default:
                 img.setImageResource(R.drawable.img_splash4);
-                ll_root.setBackgroundColor(gray);
-                break;
-        }
-        int flag2 = new Random().nextInt(1000) % 3;
-        switch (flag2) {
-            case 0:
-                ll_root.setBackgroundColor(mblue);
-                break;
-            case 1:
-                ll_root.setBackgroundColor(blue);
-                break;
-            case 2:
-                ll_root.setBackgroundColor(red);
-                break;
-            default:
                 ll_root.setBackgroundColor(gray);
                 break;
         }
