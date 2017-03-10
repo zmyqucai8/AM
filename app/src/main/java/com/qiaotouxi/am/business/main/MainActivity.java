@@ -21,7 +21,6 @@ import com.qiaotouxi.am.framework.base.BaseActivity;
 import com.qiaotouxi.am.framework.base.Constant;
 import com.qiaotouxi.am.framework.utils.AmUtlis;
 import com.qiaotouxi.am.framework.utils.SPUtils;
-import com.xindongai.hxdemo.mylibrary.TestClass;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -81,7 +80,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         initView();
         setFragment(Constant.TYPE_EQUIPMENT);
 
-        TestClass.show(this);
     }
 
     /**
