@@ -3,9 +3,13 @@ package com.qiaotouxi.am.framework.utils;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -33,6 +37,8 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
+import java.io.File;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -446,6 +452,7 @@ public class AmUtlis {
     public static void refreshCustomerManageData() {
         CostomerManageEvent event = new CostomerManageEvent();
         EventBus.getDefault().post(event);
+
     }
 
     /**
@@ -495,15 +502,132 @@ public class AmUtlis {
         }
     }
 
-    /**
-     * 照片的提示
-     *
-     * @param context
-     */
-    public static void showPhotoAlert(final Activity context) {
 
+    /**
+     * 删除单个文件
+     *
+     * @param sPath 被删除文件的文件名
+     * @return 单个文件删除成功返回true，否则返回false
+     */
+    public static void deleteFile(String sPath) {
+
+        if (TextUtils.isEmpty(sPath)) {
+            AmUtlis.showLog("路径为null");
+            return;
+        }
+        File file = new File(sPath);
+        // 路径为文件且不为空则进行删除
+        if (file.isFile() && file.exists()) {
+            file.delete();
+            AmUtlis.showLog("文件删除成功");
+        } else {
+            AmUtlis.showLog("文件删除失败");
+        }
 
     }
 
+    /**
+     * 获取屏幕宽度
+     */
+    public static int getScreenWidth(Context context) {
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        return dm.widthPixels;
+    }
 
+    /**
+     * 获取屏幕高度
+     */
+    public static int getScreenHeight(Context context) {
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        int screenHeight = dm.heightPixels;
+        return screenHeight;
+    }
+
+    /**
+     * dp转px
+     * @param context
+     * @param dp
+     * @return
+     */
+    public static int dpToPx(Context context, int dp) {
+
+        return (int) (dp * context.getResources().getDisplayMetrics().density);
+    }
+
+    /**
+     * 获取状态栏高度
+     *
+     * @param activity
+     * @return
+     */
+    public static int getStatusBarHeight(Activity activity) {
+        int result = 0;
+        int resourceId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = activity.getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
+    /**
+     * 获取状态栏的高
+     */
+    public static int getStatusBarHeights(Activity context) {
+        Rect frame = new Rect();
+        context.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
+        int statusBarHeight = frame.top;
+        if (0 == statusBarHeight) {
+            statusBarHeight = getStatusBarHeightByReflection(context);
+        }
+        return statusBarHeight;
+    }
+
+    public static int getStatusBarHeightByReflection(Context context) {
+        Class<?> c;
+        Object obj;
+        Field field;
+        // 默认为38，貌似大部分是这样的
+        int x, statusBarHeight = 38;
+        try {
+            c = Class.forName("com.android.internal.R$dimen");
+            obj = c.newInstance();
+            field = c.getField("status_bar_height");
+            x = Integer.parseInt(field.get(obj).toString());
+            statusBarHeight = context.getResources().getDimensionPixelSize(x);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        return statusBarHeight;
+    }
+
+
+    /**
+     * 分享功能
+     * <p>
+     * <p>
+     * 上下文
+     *
+     * @param activityTitle Activity的名字
+     * @param msgTitle      消息标题
+     * @param msgText       消息内容
+     * @param imgPath       图片路径，不分享图片则传null
+     */
+    public static void shareMsg(Activity activity, String activityTitle, String msgTitle, String msgText,
+                                String imgPath) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        if (imgPath == null || imgPath.equals("")) {
+            intent.setType("text/plain"); // 纯文本
+        } else {
+            File f = new File(imgPath);
+            if (f != null && f.exists() && f.isFile()) {
+                intent.setType("image/jpg");
+                Uri u = Uri.fromFile(f);
+                intent.putExtra(Intent.EXTRA_STREAM, u);
+            }
+        }
+        intent.putExtra(Intent.EXTRA_SUBJECT, msgTitle);
+        intent.putExtra(Intent.EXTRA_TEXT, msgText);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivity(Intent.createChooser(intent, activityTitle));
+    }
 }

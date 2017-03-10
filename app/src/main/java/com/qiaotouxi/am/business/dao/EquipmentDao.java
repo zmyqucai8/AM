@@ -15,8 +15,12 @@ import org.greenrobot.greendao.annotation.Property;
 public class EquipmentDao {
     @Id
     private Long id; //id 自增长
-    @Property(nameInDb = "PHOTO_LIST")
-    private String photo_list; //照片路径， 用，隔开
+    @Property(nameInDb = "PHOTO_FDJBH")
+    private String photo_fdjbh; //发动机编号
+    @Property(nameInDb = "PHOTO_CCBH")
+    private String photo_ccbh; //出厂编号
+    @Property(nameInDb = "PHOTO_RJHY")
+    private String photo_rjhy; //人机合影
     @Property(nameInDb = "NAME")
     private String name;//设备名称
     @Property(nameInDb = "BRAND")
@@ -40,6 +44,52 @@ public class EquipmentDao {
     private String phone;  //购机者phone sell=true时才有值
 
 
+    @Generated(hash = 646145297)
+    public EquipmentDao(Long id, String photo_fdjbh, String photo_ccbh,
+                        String photo_rjhy, String name, String brand, String engine_id,
+                        String manufacturer, String factory_id, String remark, boolean sell,
+                        boolean payment, String date, String phone) {
+        this.id = id;
+        this.photo_fdjbh = photo_fdjbh;
+        this.photo_ccbh = photo_ccbh;
+        this.photo_rjhy = photo_rjhy;
+        this.name = name;
+        this.brand = brand;
+        this.engine_id = engine_id;
+        this.manufacturer = manufacturer;
+        this.factory_id = factory_id;
+        this.remark = remark;
+        this.sell = sell;
+        this.payment = payment;
+        this.date = date;
+        this.phone = phone;
+    }
+
+    @Generated(hash = 775307577)
+    public EquipmentDao() {
+    }
+
+
+    public EquipmentDao(String photo_fdjbh, String photo_ccbh,
+                        String photo_rjhy, String name, String brand, String engine_id,
+                        String manufacturer, String factory_id, String remark, boolean sell,
+                        boolean payment, String date, String phone) {
+        this.photo_fdjbh = photo_fdjbh;
+        this.photo_ccbh = photo_ccbh;
+        this.photo_rjhy = photo_rjhy;
+        this.name = name;
+        this.brand = brand;
+        this.engine_id = engine_id;
+        this.manufacturer = manufacturer;
+        this.factory_id = factory_id;
+        this.remark = remark;
+        this.sell = sell;
+        this.payment = payment;
+        this.date = date;
+        this.phone = phone;
+    }
+
+
     public Long getId() {
         return this.id;
     }
@@ -48,13 +98,7 @@ public class EquipmentDao {
         this.id = id;
     }
 
-    public String getPhoto_list() {
-        return this.photo_list;
-    }
 
-    public void setPhoto_list(String photo_list) {
-        this.photo_list = photo_list;
-    }
 
     public String getName() {
         return this.name;
@@ -128,60 +172,6 @@ public class EquipmentDao {
         this.date = date;
     }
 
-    public EquipmentDao(String photo_list, String name, String brand,
-                        String engine_id, String manufacturer, String factory_id, String remark,
-                        boolean sell, boolean payment, String date, String card_id) {
-        this.photo_list = photo_list;
-        this.name = name;
-        this.brand = brand;
-        this.engine_id = engine_id;
-        this.manufacturer = manufacturer;
-        this.factory_id = factory_id;
-        this.remark = remark;
-        this.sell = sell;
-        this.payment = payment;
-        this.date = date;
-    }
-
-
-    @Generated(hash = 775307577)
-    public EquipmentDao() {
-    }
-
-    @Generated(hash = 46761151)
-    public EquipmentDao(Long id, String photo_list, String name, String brand, String engine_id,
-                        String manufacturer, String factory_id, String remark, boolean sell, boolean payment,
-                        String date, String phone) {
-        this.id = id;
-        this.photo_list = photo_list;
-        this.name = name;
-        this.brand = brand;
-        this.engine_id = engine_id;
-        this.manufacturer = manufacturer;
-        this.factory_id = factory_id;
-        this.remark = remark;
-        this.sell = sell;
-        this.payment = payment;
-        this.date = date;
-        this.phone = phone;
-    }
-
-    @Override
-    public String toString() {
-        return "EquipmentDao{" +
-                "id=" + id +
-                ", photo_list='" + photo_list + '\'' +
-                ", name='" + name + '\'' +
-                ", brand='" + brand + '\'' +
-                ", engine_id='" + engine_id + '\'' +
-                ", manufacturer='" + manufacturer + '\'' +
-                ", factory_id='" + factory_id + '\'' +
-                ", remark='" + remark + '\'' +
-                ", sell=" + sell +
-                ", payment=" + payment +
-                ", date=" + date +
-                '}';
-    }
 
     public String getPhone() {
         return this.phone;
@@ -189,6 +179,30 @@ public class EquipmentDao {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getPhoto_fdjbh() {
+        return this.photo_fdjbh;
+    }
+
+    public void setPhoto_fdjbh(String photo_fdjbh) {
+        this.photo_fdjbh = photo_fdjbh;
+    }
+
+    public String getPhoto_ccbh() {
+        return this.photo_ccbh;
+    }
+
+    public void setPhoto_ccbh(String photo_ccbh) {
+        this.photo_ccbh = photo_ccbh;
+    }
+
+    public String getPhoto_rjhy() {
+        return this.photo_rjhy;
+    }
+
+    public void setPhoto_rjhy(String photo_rjhy) {
+        this.photo_rjhy = photo_rjhy;
     }
 
 }

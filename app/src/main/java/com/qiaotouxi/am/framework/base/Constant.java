@@ -69,4 +69,14 @@ public class Constant {
      */
     public static final int CUSTMER_SELECT_REQUEST_CODE = 105;
 
+
+    /**
+     * 照片类型，
+     * 0 = 发动机编号照
+     * 1=出厂编号照
+     * 2=人机合影照
+     */
+    public static final int PHOTO_FDJBH = 0;
+    public static final int PHOTO_CCBH = 1;
+    public static final int PHOTO_RJHY = 2;
 }

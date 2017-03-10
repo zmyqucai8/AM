@@ -9,12 +9,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.qiaotouxi.am.App;
@@ -26,9 +25,6 @@ import com.qiaotouxi.am.framework.base.Constant;
 import com.qiaotouxi.am.framework.utils.AmUtlis;
 import com.qiaotouxi.am.framework.utils.BitmapUtils;
 import com.qiaotouxi.am.framework.view.PhotoPop;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,8 +39,6 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
 
     @BindView(R.id.tv_title)
     TextView tvTitle;
-    @BindView(R.id.myrecycler_layout)
-    RecyclerView mRecyclerView;
     @BindView(R.id.line)
     View line;
     @BindView(R.id.et_name)
@@ -59,10 +53,16 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
     EditText etFdjbh;
     @BindView(R.id.et_bzxx)
     EditText etBzxx;
-    @BindView(R.id.tv_add_photo)
-    TextView tv_add_photo;
     @BindView(R.id.btn_save)
     Button btnSave;
+    @BindView(R.id.img_ccbh)
+    ImageView img_ccbh;
+    @BindView(R.id.img_fdjbh)
+    ImageView img_fdjbh;
+    private String imgPathFdjbh;//发动机编号返回的photo
+    private String imgPathCcbh;//出厂编号返回的photo
+    //当前选择的照片类型
+    private int photoType = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,23 +72,13 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
         initView();
     }
 
-    AddEquipmentPhotoAdapter mAdapter;
 
     /**
      * 初始化view
      */
     private void initView() {
-
-
-        mAdapter = new AddEquipmentPhotoAdapter(this, mImgPathList, 0);
-        // 设置布局管理器
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        mRecyclerView.setLayoutManager(linearLayoutManager);
-        mAdapter.setEmptyView(AmUtlis.getEmptyView(this, "请点击上方添加按钮添加3张照片"));
-        mRecyclerView.setAdapter(mAdapter);
-        tv_add_photo.setTypeface(AmUtlis.getTTF());
-        tv_add_photo.setOnClickListener(this);
+        img_ccbh.setOnClickListener(this);
+        img_fdjbh.setOnClickListener(this);
         btnSave.setOnClickListener(this);
 
     }
@@ -97,11 +87,16 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_add_photo:
+            case R.id.img_fdjbh:
+                photoType = Constant.PHOTO_FDJBH;
+                PhotoPop.getInstance().showPop(this);
+                break;
+            case R.id.img_ccbh:
+                photoType = Constant.PHOTO_CCBH;
                 PhotoPop.getInstance().showPop(this);
                 break;
             case R.id.btn_save:
-                save(false, false, "");
+                save();
                 break;
 
         }
@@ -111,26 +106,18 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
     /**
      * 保存设备
      */
-    private void save(boolean sell, boolean payment, String card_id) {
+    private void save() {
 
-        if (mImgPathList.size() < 3) {
-            AmUtlis.showToast("请至少添加3张设备照片");
+        if (TextUtils.isEmpty(imgPathCcbh)) {
+            AmUtlis.showToast("请上传出厂编号照片");
             return;
         }
-
-        String photo_list;
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < mImgPathList.size(); i++) {
-
-            if (i != mImgPathList.size() - 1) {
-                builder.append(mImgPathList.get(i) + ",");
-            } else {
-                builder.append(mImgPathList.get(i));
-            }
+        if (TextUtils.isEmpty(imgPathFdjbh)) {
+            AmUtlis.showToast("请上传发动机编号照片");
+            return;
         }
-
-        photo_list = builder.toString();
-        AmUtlis.showLog("photo_list=" + photo_list);
+        AmUtlis.showLog("出厂编号path=" + imgPathCcbh);
+        AmUtlis.showLog("发动机编号path=" + imgPathFdjbh);
 
         String name = etName.getText().toString();
         if (TextUtils.isEmpty(name)) {
@@ -159,13 +146,8 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
             return;
         }
         String bzxx = etBzxx.getText().toString();
-//        if (TextUtils.isEmpty(name)) {
-//            AmUtlis.showToast("请填写发动机编号");
-//            return;
-//        }
 
-
-        EquipmentDao dao = new EquipmentDao(photo_list, name, pinpai, fdjbh, changjia, ccbh, bzxx, sell, payment, "", card_id);
+        EquipmentDao dao = new EquipmentDao(imgPathFdjbh, imgPathCcbh, "", name, pinpai, fdjbh, changjia, ccbh, bzxx, false, false, "", "");
 
         EquipmentDaoDao equipmentDaoDao = App.getDaoSession(this).getEquipmentDaoDao();
         try {
@@ -186,9 +168,6 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
 
     }
 
-    private String imgPath;//当前拍照返回的一张图片
-
-    public List<String> mImgPathList = new ArrayList<String>();//照片数量集合
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -197,34 +176,55 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
             //拍照返回
             Bundle extras = data.getExtras();
             Bitmap b = (Bitmap) extras.get("data");
-//            imgTx.setImageBitmap(b);
-            imgPath = BitmapUtils.save(b);
-            mImgPathList.add(imgPath);
-            mAdapter.setNewData(mImgPathList);
-//            mAdapter.notifyDataSetChanged();
+            setImgShow(b);
         } else if (data != null && requestCode == Constant.ALBUM && resultCode == RESULT_OK) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(selectedImage,
                     filePathColumn, null, null, null);
-
             if (null == cursor) {
-                imgPath = data.getData().getPath();
+                if (photoType == Constant.PHOTO_FDJBH) {
+                    imgPathFdjbh = data.getData().getPath();
+                } else if (photoType == Constant.PHOTO_CCBH) {
+                    imgPathCcbh = data.getData().getPath();
+                }
             } else {
                 cursor.moveToFirst();
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                imgPath = cursor.getString(columnIndex);
+                if (photoType == Constant.PHOTO_FDJBH) {
+                    imgPathFdjbh = cursor.getString(columnIndex);
+                } else if (photoType == Constant.PHOTO_CCBH) {
+                    imgPathCcbh = cursor.getString(columnIndex);
+                }
                 cursor.close();
             }
-            Bitmap bitmap = BitmapFactory.decodeFile(imgPath);
-//            imgTx.setImageBitmap(bitmap);
-            imgPath = BitmapUtils.save(bitmap);
-            AmUtlis.showLog("imgPath=" + imgPath);
-            mImgPathList.add(imgPath);
-            mAdapter.setNewData(mImgPathList);
+            Bitmap bitmap = null;
+            if (photoType == Constant.PHOTO_FDJBH) {
+                bitmap = BitmapFactory.decodeFile(imgPathFdjbh);
+            } else if (photoType == Constant.PHOTO_CCBH) {
+                bitmap = BitmapFactory.decodeFile(imgPathCcbh);
+            }
+            setImgShow(bitmap);
         }
 
     }
+
+    /**
+     * 设置img显示， 根据选择类型
+     */
+    private void setImgShow(Bitmap b) {
+        if (photoType == Constant.PHOTO_FDJBH) {
+            AmUtlis.deleteFile(imgPathFdjbh);
+            imgPathFdjbh = BitmapUtils.save(b, BitmapUtils.IMG_TYPE_FDJBH);
+            img_fdjbh.setImageBitmap(b);
+
+        } else if (photoType == Constant.PHOTO_CCBH) {
+            AmUtlis.deleteFile(imgPathCcbh);
+            imgPathCcbh = BitmapUtils.save(b, BitmapUtils.IMG_TYPE_CCBH);
+            img_ccbh.setImageBitmap(b);
+        }
+    }
+
 
     /**
      * 请求权限后的回调。
@@ -259,6 +259,5 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onBackPressed() {
         AmUtlis.showCloseAlert(AddEquipmentActivity.this);
-
     }
 }

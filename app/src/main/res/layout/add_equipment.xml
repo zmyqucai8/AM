@@ -20,25 +20,69 @@
             android:textSize="25sp" />
 
         <TextView
-            android:id="@+id/tv_add_photo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="20dp"
-            android:text="设备照片　　　　　&#xe618; 添加"
+            android:text="设备照片"
             android:textColor="@color/mblue" />
 
         <include layout="@layout/line" />
 
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/myrecycler_layout"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_margin="5dp"
-            android:background="@color/transparent"
-            android:scrollbarStyle="outsideOverlay"
-            android:scrollbars="vertical"></android.support.v7.widget.RecyclerView>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+
+                <ImageView
+                    android:id="@+id/img_ccbh"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/img_photo_add" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="出厂编号照片" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+
+                <ImageView
+                    android:id="@+id/img_fdjbh"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/img_photo_add" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="发动机编号照片" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
 
         <TextView
             android:layout_width="match_parent"

@@ -191,11 +191,13 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null && requestCode == Constant.CAPTURE && resultCode == RESULT_OK) {
             //拍照返回
+            AmUtlis.deleteFile(imgPath);
             Bundle extras = data.getExtras();
             Bitmap b = (Bitmap) extras.get("data");
             imgTx.setImageBitmap(b);
-            imgPath = BitmapUtils.save(b);
+            imgPath = BitmapUtils.save(b, BitmapUtils.IMG_TYPE_KHTX);
         } else if (data != null && requestCode == Constant.ALBUM && resultCode == RESULT_OK) {
+            AmUtlis.deleteFile(imgPath);
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(selectedImage,
@@ -209,9 +211,10 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
                 imgPath = cursor.getString(columnIndex);
                 cursor.close();
             }
+
             Bitmap bitmap = BitmapFactory.decodeFile(imgPath);
             imgTx.setImageBitmap(bitmap);
-            imgPath = BitmapUtils.save(bitmap);
+            imgPath = BitmapUtils.save(bitmap, BitmapUtils.IMG_TYPE_KHTX);
             AmUtlis.showLog("imgPath=" + imgPath);
         }
 

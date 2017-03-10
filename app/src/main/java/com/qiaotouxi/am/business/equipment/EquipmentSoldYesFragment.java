@@ -36,7 +36,7 @@ public class EquipmentSoldYesFragment extends BaseFragment {
 
     @Override
     protected View initView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.equipment_sold_no, container, false);
+        View rootView = inflater.inflate(R.layout.equipment_sold_fragment, container, false);
         ButterKnife.bind(this, rootView);
         EventBus.getDefault().register(this);
         return rootView;

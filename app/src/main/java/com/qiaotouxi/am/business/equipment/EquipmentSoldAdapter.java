@@ -56,22 +56,21 @@ public class EquipmentSoldAdapter extends BaseQuickAdapter<EquipmentDao, BaseVie
                     .setText(R.id.tv_status, "未出售");
         }
 
-        //设置照片
-        String photo_list = bean.getPhoto_list();
-        if (!TextUtils.isEmpty(photo_list)) {
-
-
-        String imgPath;
-        try {
-            //如果出现异常， 说明切割字符串出现问题，表示只有一张图片
-            imgPath = photo_list.substring(0, photo_list.indexOf(","));
-        } catch (Exception e) {
-            imgPath = photo_list;
+        //设置照片 如果未出售则显示出厂编号照片， 如果是已出售的，显示人机合影照片、
+        if (bean.getSell()) {
+            if (!TextUtils.isEmpty(bean.getPhoto_rjhy())) {
+                Bitmap bitmap = BitmapUtils.getDiskBitmap(bean.getPhoto_rjhy());
+                if (null != bitmap)
+                    holder.setImageBitmap(R.id.img_tx, bitmap);
+            }
+        } else {
+            if (!TextUtils.isEmpty(bean.getPhoto_fdjbh())) {
+                Bitmap bitmap = BitmapUtils.getDiskBitmap(bean.getPhoto_fdjbh());
+                if (null != bitmap)
+                    holder.setImageBitmap(R.id.img_tx, bitmap);
+            }
         }
 
-        Bitmap bitmap = BitmapUtils.getDiskBitmap(imgPath);
-        holder.setImageBitmap(R.id.img_tx, bitmap);
-        }
         //设置点击事件, 根据出售状态
         holder.getConvertView().setOnClickListener(new View.OnClickListener() {
             @Override

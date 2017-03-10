@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
+
     <LinearLayout
         android:id="@+id/ll_btn"
         android:layout_width="match_parent"
@@ -91,15 +91,14 @@
         android:background="@color/colorPrimaryDark">
 
         <TextView
-            android:id="@+id/tv_test"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_photo"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerInParent="true"
-            android:layout_marginLeft="10dp"
-            android:text="Test"
-            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:text="&#xe628;"
+            android:textColor="@drawable/text_white_selector"
             android:textSize="25sp" />
 
 
@@ -114,11 +113,11 @@
 
         <TextView
             android:id="@+id/tv_button"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
-            android:layout_marginRight="15dp"
+            android:gravity="center"
             android:text="&#xe618;"
             android:textColor="@drawable/text_white_selector"
             android:textSize="25sp" />

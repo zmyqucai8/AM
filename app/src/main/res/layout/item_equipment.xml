@@ -29,7 +29,6 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerInParent="true"
                 android:layout_marginLeft="10dp"
-                android:scaleType="fitXY"
                 android:src="@drawable/img_tx" />
 
             <LinearLayout

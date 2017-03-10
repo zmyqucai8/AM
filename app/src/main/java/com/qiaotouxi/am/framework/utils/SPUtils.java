@@ -42,4 +42,5 @@ public class SPUtils {
     public static boolean getisAddData(Context context) {
         return getPreferences(context).getBoolean("AddData", true);
     }
+
 }

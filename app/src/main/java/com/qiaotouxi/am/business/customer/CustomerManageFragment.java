@@ -30,6 +30,7 @@ import ca.barrenechea.widget.recyclerview.decoration.DividerDecoration;
 import ca.barrenechea.widget.recyclerview.decoration.StickyHeaderDecoration;
 import de.greenrobot.event.EventBus;
 
+
 /**
  * Created by zmy on 2017/2/28.
  * 客户管理fragment

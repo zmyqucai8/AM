@@ -37,16 +37,43 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support:recyclerview-v7:23.3.0'
+
+    //    butterknife注解框架
     compile 'com.jakewharton:butterknife:8.4.0'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
-    compile 'com.android.support:recyclerview-v7:23.3.0'
+    //google play services
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
+    //数据库 greendao
     compile 'org.greenrobot:greendao:3.2.0'
+    //BaseRecyclerViewAdapterHelper
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.6.7'
-    compile files('libs/eventbus.jar')
-    compile 'com.android.support:cardview-v7:25.0.1'
+    //evnetbus
+    //拼音
     compile 'ca.barrenechea.header-decor:header-decor:0.2.6'
     compile files('libs/pinyin4j-2.5.0.jar')
+    //高防ios 弹框
     compile 'com.bigkoo:alertview:1.0.3'
-    compile project(':mylibrary')
+    //glide图片框架
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile files('libs/eventbus.jar')
+    compile 'com.android.support:cardview-v7:25.0.1'
+    compile 'com.android.support:support-v4:25.0.1'
 }
+
+//导出为jar包
+//task to delete the old jar
+//task deleteOldJar(type: Delete) {
+//    delete 'release/AndroidPlugin.jar'
+//}
+
+////task to export contents as jar
+//task exportJar(type: Copy) {
+//    from('build/intermediates/bundles/release/')
+//    into('release/')
+//    include('classes.jar')
+//    ///Rename the jar
+//    rename('classes.jar', 'AndroidPlugin.jar')
+//}
+//
+//exportJar.dependsOn(deleteOldJar, build)

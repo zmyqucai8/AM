@@ -21,7 +21,6 @@ import com.qiaotouxi.am.framework.base.BaseActivity;
 import com.qiaotouxi.am.framework.base.Constant;
 import com.qiaotouxi.am.framework.utils.AmUtlis;
 import com.qiaotouxi.am.framework.utils.SPUtils;
-import com.xindongai.hxdemo.mylibrary.TestClass;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -48,8 +47,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     TextView tvTitle;
     @BindView(R.id.tv_sbgl_ttf)
     TextView tv_sbgl_ttf;
-    @BindView(R.id.tv_test)
-    TextView tv_test;
+    @BindView(R.id.tv_photo)
+    TextView tv_photo;
     @BindView(R.id.tv_khgl_ttf)
     TextView tv_khgl_ttf;
     @BindView(R.id.tv_khgl)
@@ -81,11 +80,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         initView();
         setFragment(Constant.TYPE_EQUIPMENT);
 
-        TestClass.show(this);
     }
 
+
     /**
-     * 设置默认数据， 记得注释代码
+     * TODO：设置默认数据  只设置一次。 正式版请注释
      */
     private void setDefaultData() {
 
@@ -102,12 +101,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private void initView() {
         ButterKnife.bind(this);
         tv_khgl_ttf.setTypeface(AmUtlis.getTTF());
+        tv_photo.setTypeface(AmUtlis.getTTF());
         tvButton.setTypeface(AmUtlis.getTTF());
         tv_sbgl_ttf.setTypeface(AmUtlis.getTTF());
         llSbgl.setOnClickListener(this);
         tvButton.setOnClickListener(this);
         llKhgl.setOnClickListener(this);
-        tv_test.setOnClickListener(this);
+        tv_photo.setOnClickListener(this);
     }
 
 
@@ -185,8 +185,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.tv_button:
                 startAddActivity(mType);
                 break;
-            case R.id.tv_test:
-//                startActivity(new Intent(MainActivity.this, TestDaoActivity.class));
+            case R.id.tv_photo:
+                startActivity(new Intent(MainActivity.this, MyAlbumActivity.class));
                 break;
         }
     }

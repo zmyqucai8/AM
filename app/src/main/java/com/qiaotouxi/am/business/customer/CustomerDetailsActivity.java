@@ -19,11 +19,11 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.bigkoo.alertview.AlertView;
+import com.bigkoo.alertview.OnItemClickListener;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.qiaotouxi.am.App;
 import com.qiaotouxi.am.R;
 import com.qiaotouxi.am.business.dao.CustomerDao;
-import com.qiaotouxi.am.business.dao.CustomerDaoDao;
 import com.qiaotouxi.am.business.dao.DaoUtils;
 import com.qiaotouxi.am.business.dao.EquipmentDao;
 import com.qiaotouxi.am.business.equipment.EquipmentSoldAdapter;
@@ -99,7 +99,8 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
         if (!TextUtils.isEmpty(path)) {
             imgPath = path;
             Bitmap bitmap = BitmapUtils.getDiskBitmap(path);
-            imgTx.setImageBitmap(bitmap);
+            if (null != bitmap)
+                imgTx.setImageBitmap(bitmap);
         }
         etName.setText(mCustomerDao.getName());
         etPhone.setText(mCustomerDao.getPhone());
@@ -149,24 +150,47 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
         }
     }
 
+    private boolean isShowAlert = true;
+
     /**
      * 删除客户
      */
     private void delete() {
 
-        if (mCustomerDao.getBuy()) {
-            AmUtlis.showToast("该用户已购买设备，无法删除");
+        if (!isShowAlert) {
             return;
         }
+        isShowAlert = false;
+        new AlertView.Builder().setContext(CustomerDetailsActivity.this)
+                .setStyle(AlertView.Style.Alert)
+                .setTitle("温馨提示")
+                .setMessage("你确定要删除这个客户吗")
+                .setCancelText("取消")
+                .setDestructive("确定")
+                .setOthers(null)
+                .setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(Object o, int position) {
+                        isShowAlert = true;
+                        if (position != -1) {
+                            if (mCustomerDao.getBuy()) {
+                                AmUtlis.showToast("该用户已购买设备，无法删除");
+                                return;
+                            }
+                            boolean b = DaoUtils.deleteCustomer(CustomerDetailsActivity.this, mCustomerDao);
+                            if (b) {
+                                AmUtlis.showToast("删除成功");
+                                AmUtlis.refreshCustomerManageData();
+                                finish();
+                            } else {
+                                AmUtlis.showToast("删除失败");
+                            }
+                        }
+                    }
+                })
+                .build()
+                .show();
 
-        boolean b = DaoUtils.deleteCustomer(CustomerDetailsActivity.this, mCustomerDao);
-        if (b) {
-            AmUtlis.showToast("删除成功");
-            AmUtlis.refreshCustomerManageData();
-            finish();
-        } else {
-            AmUtlis.showToast("删除失败");
-        }
     }
 
 
@@ -217,23 +241,24 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
                 sex = 1;
             }
         }
-        CustomerDaoDao dao = App.getDaoSession(this).getCustomerDaoDao();
-
-        CustomerDao unique = dao.queryRawCreate("where PHONE=? order by PHONE", phone).unique();
-        if (unique != null && unique.getPhone().equals(phone)) {
-            //更新数据
-            unique.setPhoto_path(imgPath);
-            unique.setName(name);
-            unique.setPhone(phone);
-            unique.setRemark(bzxx);
-            unique.setSex(sex);
-            unique.setLocation(location);
-            dao.update(unique);
-            AmUtlis.showToast("保存成功");
-            AmUtlis.refreshCustomerManageData();
-        } else {
-            AmUtlis.showToast("保存失败");
-        }
+//        CustomerDaoDao dao = App.getDaoSession(this).getCustomerDaoDao();
+//        CustomerDao unique = DaoUtils.getCustomerByPhone(CustomerDetailsActivity.this, phone);
+//        if (unique != null && unique.getPhone().equals(phone)) {
+        //更新数据
+        mCustomerDao.setPhoto_path(imgPath);
+        mCustomerDao.setName(name);
+        mCustomerDao.setPhone(phone);
+        mCustomerDao.setCardId(cardId);
+        mCustomerDao.setRemark(bzxx);
+        mCustomerDao.setSex(sex);
+        mCustomerDao.setLocation(location);
+//        dao.update(mCustomerDao);
+        DaoUtils.updateCustomerDao(this, mCustomerDao);
+        AmUtlis.showToast("修改成功");
+        AmUtlis.refreshCustomerManageData();
+//        } else {
+//            AmUtlis.showToast("修改失败");
+//        }
 
     }
 
@@ -245,7 +270,7 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
             Bundle extras = data.getExtras();
             Bitmap b = (Bitmap) extras.get("data");
             imgTx.setImageBitmap(b);
-            imgPath = BitmapUtils.save(b);
+            imgPath = BitmapUtils.save(b, BitmapUtils.IMG_TYPE_KHTX);
         } else if (data != null && requestCode == Constant.ALBUM && resultCode == RESULT_OK) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
@@ -262,7 +287,7 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
             }
             Bitmap bitmap = BitmapFactory.decodeFile(imgPath);
             imgTx.setImageBitmap(bitmap);
-            imgPath = BitmapUtils.save(bitmap);
+            imgPath = BitmapUtils.save(bitmap, BitmapUtils.IMG_TYPE_KHTX);
             AmUtlis.showLog("imgPath=" + imgPath);
         }
 
