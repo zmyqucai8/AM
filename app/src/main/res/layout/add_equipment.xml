@@ -113,19 +113,9 @@
                     android:layout_width="wrap_content"
 
                     android:layout_height="wrap_content"
-                    android:text="名称" />
+                    android:text="品牌型号" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="品牌" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="厂家" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -163,40 +153,14 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:ellipsize="end"
-                    android:hint="请输入名称（必填）"
+                    android:hint="请输入品牌型号（必填）"
                     android:singleLine="true"
                     android:textCursorDrawable="@drawable/shape_cursor_bg"
                     android:textSize="14sp" />
 
-                <EditText
-                    android:id="@+id/tv_pp"
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@null"
-                    android:ellipsize="end"
-                    android:hint="请输入品牌（必填）"
-                    android:singleLine="true"
-                    android:textCursorDrawable="@drawable/shape_cursor_bg"
-                    android:textSize="14sp" />
-
-                <EditText
-                    android:id="@+id/et_cj"
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@null"
-                    android:ellipsize="end"
-                    android:hint="请输入厂家（必填）"
-                    android:singleLine="true"
-                    android:textCursorDrawable="@drawable/shape_cursor_bg"
-                    android:textSize="14sp" />
 
                 <EditText
                     android:id="@+id/et_ccbh"
-
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"

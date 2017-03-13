@@ -255,11 +255,9 @@ public class DaoUtils {
             dao.setSell(false);
             dao.setPhone("");//未出售就没有
             dao.setRemark(i + "备注信息随便咯");
-            dao.setBrand(i + "品牌也随便");
             dao.setDate("");
             dao.setEngine_id(i + "发动机编号" + System.currentTimeMillis() + zm[i]);
             dao.setFactory_id(i + "生产编号");
-            dao.setManufacturer(i + "厂家");
             dao.setName(i + "设备名字");
             list.add(dao);
         }

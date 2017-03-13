@@ -34,7 +34,7 @@
             <LinearLayout
                 android:id="@+id/ll_text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="100dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="5dp"
                 android:layout_toLeftOf="@+id/tv_status"
@@ -46,32 +46,15 @@
                     android:id="@+id/tv_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
-                    android:text="名称"
+                    android:text="品牌型号"
                     android:textColor="@color/white" />
 
-
-                <TextView
-                    android:id="@+id/tv_pp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text="品牌"
-                    android:textColor="@color/white" />
-
-                <TextView
-                    android:id="@+id/tv_cj"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text="厂家"
-                    android:textColor="@color/white" />
 
                 <TextView
                     android:id="@+id/tv_ccbh"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
+                    android:layout_marginTop="10dp"
                     android:text="出厂编号"
                     android:textColor="@color/white" />
 
@@ -79,7 +62,7 @@
                     android:id="@+id/tv_fdjbh"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
+                    android:layout_marginTop="10dp"
                     android:text="发动机编号"
                     android:textColor="@color/white" />
 

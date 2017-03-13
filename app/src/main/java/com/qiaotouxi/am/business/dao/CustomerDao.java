@@ -43,6 +43,8 @@ public class CustomerDao implements Comparable<CustomerDao> {
     private boolean buy;//是否购机
     @Property(nameInDb = "ENGINE_ID_LIST")//已购设备id ，分开
     private String engine_id_list;
+    @Property(nameInDb = "DIR_PATH")
+    private String dirPath;  //当前用户存储的路径dir
 
 
     @Override
@@ -54,10 +56,10 @@ public class CustomerDao implements Comparable<CustomerDao> {
     public CustomerDao() {
     }
 
-    @Generated(hash = 199927924)
-    public CustomerDao(Long id, String name, String phone, String cardId,
-                       String location, String photo_path, String remark, int sex, Date date,
-                       String pinyin, boolean buy, String engine_id_list) {
+    @Generated(hash = 79351686)
+    public CustomerDao(Long id, String name, String phone, String cardId, String location,
+                       String photo_path, String remark, int sex, Date date, String pinyin, boolean buy,
+                       String engine_id_list, String dirPath) {
         this.id = id;
         this.name = name;
         this.phone = phone;
@@ -70,8 +72,8 @@ public class CustomerDao implements Comparable<CustomerDao> {
         this.pinyin = pinyin;
         this.buy = buy;
         this.engine_id_list = engine_id_list;
+        this.dirPath = dirPath;
     }
-
 
     public Long getId() {
         return this.id;
@@ -183,6 +185,14 @@ public class CustomerDao implements Comparable<CustomerDao> {
 
     public void setEngine_id_list(String engine_id_list) {
         this.engine_id_list = engine_id_list;
+    }
+
+    public String getDirPath() {
+        return this.dirPath;
+    }
+
+    public void setDirPath(String dirPath) {
+        this.dirPath = dirPath;
     }
 
 }

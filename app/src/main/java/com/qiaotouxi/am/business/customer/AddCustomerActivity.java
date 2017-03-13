@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -113,7 +112,7 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
      */
     private void saveData() {
 
-        if (TextUtils.isEmpty(imgPath)) {
+        if (b == null) {
             AmUtlis.showToast("请上传照片");
             return;
         }
@@ -155,6 +154,8 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
                 sex = 1;
             }
         }
+
+        imgPath = BitmapUtils.saveImg(b, name + phone, BitmapUtils.IMG_TYPE_KHTX);
         CustomerDao dao = new CustomerDao();
 //        name, phone, cardId, location, imgPath, bzxx, sex, false, new Date()
         dao.setName(name);
@@ -163,6 +164,7 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
         dao.setLocation(location);
         dao.setEngine_id_list("");
         dao.setPhoto_path(imgPath);
+        dao.setDirPath(name + phone);
         dao.setRemark(bzxx);
         dao.setSex(sex);
         dao.setBuy(false);
@@ -185,6 +187,7 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
+    private Bitmap b;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -193,9 +196,9 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
             //拍照返回
             AmUtlis.deleteFile(imgPath);
             Bundle extras = data.getExtras();
-            Bitmap b = (Bitmap) extras.get("data");
+            b = (Bitmap) extras.get("data");
             imgTx.setImageBitmap(b);
-            imgPath = BitmapUtils.save(b, BitmapUtils.IMG_TYPE_KHTX);
+
         } else if (data != null && requestCode == Constant.ALBUM && resultCode == RESULT_OK) {
             AmUtlis.deleteFile(imgPath);
             Uri selectedImage = data.getData();
@@ -212,10 +215,17 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
                 cursor.close();
             }
 
-            Bitmap bitmap = BitmapFactory.decodeFile(imgPath);
-            imgTx.setImageBitmap(bitmap);
-            imgPath = BitmapUtils.save(bitmap, BitmapUtils.IMG_TYPE_KHTX);
-            AmUtlis.showLog("imgPath=" + imgPath);
+            b = BitmapUtils.getDiskBitmap(imgPath);
+
+            if (b == null) {
+                AmUtlis.showToast("图片已被删除，或不存在");
+                return;
+            }
+
+            imgTx.setImageBitmap(b);
+
+//            imgPath = BitmapUtils.save(bitmap, BitmapUtils.IMG_TYPE_KHTX);
+//            AmUtlis.showLog("imgPath=" + imgPath);
         }
 
     }

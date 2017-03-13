@@ -3,7 +3,6 @@ package com.qiaotouxi.am.business.customer;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -101,6 +100,9 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
             Bitmap bitmap = BitmapUtils.getDiskBitmap(path);
             if (null != bitmap)
                 imgTx.setImageBitmap(bitmap);
+            else {
+                imgTx.setImageResource(R.drawable.img_splash1);
+            }
         }
         etName.setText(mCustomerDao.getName());
         etPhone.setText(mCustomerDao.getPhone());
@@ -270,7 +272,7 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
             Bundle extras = data.getExtras();
             Bitmap b = (Bitmap) extras.get("data");
             imgTx.setImageBitmap(b);
-            imgPath = BitmapUtils.save(b, BitmapUtils.IMG_TYPE_KHTX);
+            imgPath = BitmapUtils.saveImg(b, mCustomerDao.getDirPath(), BitmapUtils.IMG_TYPE_KHTX);
         } else if (data != null && requestCode == Constant.ALBUM && resultCode == RESULT_OK) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
@@ -285,9 +287,13 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
                 imgPath = cursor.getString(columnIndex);
                 cursor.close();
             }
-            Bitmap bitmap = BitmapFactory.decodeFile(imgPath);
+            Bitmap bitmap = BitmapUtils.getDiskBitmap(imgPath);
+            if (bitmap == null) {
+                AmUtlis.showToast("图片被删除或找不到");
+                return;
+            }
             imgTx.setImageBitmap(bitmap);
-            imgPath = BitmapUtils.save(bitmap, BitmapUtils.IMG_TYPE_KHTX);
+            imgPath = BitmapUtils.saveImg(bitmap, mCustomerDao.getDirPath(), BitmapUtils.IMG_TYPE_KHTX);
             AmUtlis.showLog("imgPath=" + imgPath);
         }
 

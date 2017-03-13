@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -41,9 +42,7 @@ public class EquipmentSoldAdapter extends BaseQuickAdapter<EquipmentDao, BaseVie
 
         //基本信息
         holder
-                .setText(R.id.tv_name, "名　　　称： " + bean.getName())
-                .setText(R.id.tv_pp, "品　　　牌： " + bean.getBrand())
-                .setText(R.id.tv_cj, "厂　　　家： " + bean.getManufacturer())
+                .setText(R.id.tv_name, "品牌　型号： " + bean.getName())
                 .setText(R.id.tv_ccbh, "出厂　编号： " + bean.getFactory_id())
                 .setText(R.id.tv_fdjbh, "发动机编号： " + bean.getEngine_id());
 
@@ -62,12 +61,20 @@ public class EquipmentSoldAdapter extends BaseQuickAdapter<EquipmentDao, BaseVie
                 Bitmap bitmap = BitmapUtils.getDiskBitmap(bean.getPhoto_rjhy());
                 if (null != bitmap)
                     holder.setImageBitmap(R.id.img_tx, bitmap);
+                else {
+                    ImageView v = holder.getView(R.id.img_tx);
+                    v.setImageResource(R.drawable.img_splash1);
+                }
             }
         } else {
             if (!TextUtils.isEmpty(bean.getPhoto_fdjbh())) {
                 Bitmap bitmap = BitmapUtils.getDiskBitmap(bean.getPhoto_fdjbh());
                 if (null != bitmap)
                     holder.setImageBitmap(R.id.img_tx, bitmap);
+                else {
+                    ImageView v = holder.getView(R.id.img_tx);
+                    v.setImageResource(R.drawable.img_splash1);
+                }
             }
         }
 

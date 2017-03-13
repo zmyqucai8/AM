@@ -3,6 +3,7 @@ package com.qiaotouxi.am.business.main;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.qiaotouxi.am.R;
 import com.qiaotouxi.am.framework.base.BaseActivity;
 import com.qiaotouxi.am.framework.utils.AmUtlis;
 import com.qiaotouxi.am.framework.utils.BitmapUtils;
+import com.qiaotouxi.am.framework.utils.SDCardHelper;
 import com.qiaotouxi.am.framework.view.DividerLine;
 
 import java.io.File;
@@ -36,6 +38,8 @@ public class MyAlbumActivity extends BaseActivity implements View.OnClickListene
     RecyclerView mRecyclerView;
     @BindView(R.id.tv_title)
     TextView tv_title;
+    @BindView(R.id.tv_path)
+    TextView tv_path;
     @BindView(R.id.img_ccbh)
     ImageView imgCcbh;
     @BindView(R.id.img_fdjbh)
@@ -62,6 +66,23 @@ public class MyAlbumActivity extends BaseActivity implements View.OnClickListene
         ButterKnife.bind(this);
         initData();
         initView();
+
+        test();
+    }
+
+    /**
+     * 测试方法
+     */
+    private void test() {
+
+
+        AmUtlis.showLog(" 获取SD卡的可用空间大小=" + SDCardHelper.getSDCardAvailableSize());
+        AmUtlis.showLog(" 获取SD卡的根目录=" + SDCardHelper.getSDCardBaseDir());
+        AmUtlis.showLog(" 获取SD卡私有Cache目录的路径=" + SDCardHelper.getSDCardPrivateCacheDir(MyAlbumActivity.this));
+        AmUtlis.showLog(" 获取SD卡公有目录的路径 图片 =" + SDCardHelper.getSDCardPublicDir(Environment.DIRECTORY_PICTURES));
+        AmUtlis.showLog(" 获取SD卡私有Cache目录的路径 图片=" + SDCardHelper.getSDCardPrivateFilesDir(MyAlbumActivity.this, Environment.DIRECTORY_PICTURES));
+
+
     }
 
     /**
@@ -75,26 +96,24 @@ public class MyAlbumActivity extends BaseActivity implements View.OnClickListene
             return;
         }
         File fa[] = file.listFiles();
-        for (int i = 0; i < fa.length; i++) {
-            File fs = fa[i];
-            if (!fs.isDirectory()) {
-                String name = fs.getName();
-                if (name.contains(BitmapUtils.IMG_TYPE_CCBH)) {
-                    mCcbhList.add(fs.getAbsolutePath());
-                } else if (name.contains(BitmapUtils.IMG_TYPE_FDJBH)) {
-                    mFdjbhList.add(fs.getAbsolutePath());
-                } else if (name.contains(BitmapUtils.IMG_TYPE_KHTX)) {
-                    mKhtxList.add(fs.getAbsolutePath());
-                } else if (name.contains(BitmapUtils.IMG_TYPE_RJHY)) {
-                    mRjhyList.add(fs.getAbsolutePath());
+
+        if (null != fa && fa.length > 0)
+            for (int i = 0; i < fa.length; i++) {
+                File fs = fa[i];
+                if (!fs.isDirectory()) {
+                    String name = fs.getName();
+                    if (name.contains(BitmapUtils.IMG_TYPE_CCBH)) {
+                        mCcbhList.add(fs.getAbsolutePath());
+                    } else if (name.contains(BitmapUtils.IMG_TYPE_FDJBH)) {
+                        mFdjbhList.add(fs.getAbsolutePath());
+                    } else if (name.contains(BitmapUtils.IMG_TYPE_KHTX)) {
+                        mKhtxList.add(fs.getAbsolutePath());
+                    } else if (name.contains(BitmapUtils.IMG_TYPE_RJHY)) {
+                        mRjhyList.add(fs.getAbsolutePath());
+                    }
+                    AmUtlis.showLog(fs.getAbsolutePath() + "文件名");
                 }
-
-
-                AmUtlis.showLog(fs.getAbsolutePath() + "文件名");
-
-
             }
-        }
 
     }
 
@@ -102,6 +121,7 @@ public class MyAlbumActivity extends BaseActivity implements View.OnClickListene
      * 初始化view 与data
      */
     private void initView() {
+        tv_path.setText("图片存储路径:" + file.getAbsolutePath() + "/");
         //设置adapter
         mAdapter = new MyAlbumAdapter(MyAlbumActivity.this, mCcbhList);
         mRecyclerView.setLayoutManager(new GridLayoutManager(MyAlbumActivity.this, 3));

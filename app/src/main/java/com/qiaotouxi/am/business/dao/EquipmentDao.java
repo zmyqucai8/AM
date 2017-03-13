@@ -13,6 +13,24 @@ import org.greenrobot.greendao.annotation.Property;
  */
 @Entity
 public class EquipmentDao {
+    @Override
+    public String toString() {
+        return "EquipmentDao{" +
+                "id=" + id +
+                ", photo_fdjbh='" + photo_fdjbh + '\'' +
+                ", photo_ccbh='" + photo_ccbh + '\'' +
+                ", photo_rjhy='" + photo_rjhy + '\'' +
+                ", name='" + name + '\'' +
+                ", engine_id='" + engine_id + '\'' +
+                ", factory_id='" + factory_id + '\'' +
+                ", remark='" + remark + '\'' +
+                ", sell=" + sell +
+                ", payment=" + payment +
+                ", date='" + date + '\'' +
+                ", phone='" + phone + '\'' +
+                '}';
+    }
+
     @Id
     private Long id; //id 自增长
     @Property(nameInDb = "PHOTO_FDJBH")
@@ -23,13 +41,13 @@ public class EquipmentDao {
     private String photo_rjhy; //人机合影
     @Property(nameInDb = "NAME")
     private String name;//设备名称
-    @Property(nameInDb = "BRAND")
-    private String brand;//设备品牌
+    //    @Property(nameInDb = "BRAND")
+//    private String brand;//设备品牌
     @Property(nameInDb = "ENGINE_ID")
     @Index(unique = true)
     private String engine_id;//发动机编号  作为设备唯一id
-    @Property(nameInDb = "MANUFACTURER")
-    private String manufacturer;//厂家名称
+    //    @Property(nameInDb = "MANUFACTURER")
+//    private String manufacturer;//厂家名称
     @Property(nameInDb = "FACTORY_ID")
     private String factory_id;//出厂编号
     @Property(nameInDb = "REMARK")
@@ -43,50 +61,51 @@ public class EquipmentDao {
     @Property(nameInDb = "PHONE")
     private String phone;  //购机者phone sell=true时才有值
 
+    @Property(nameInDb = "DIR_PATH")
+    private String dirPath;  //当前用户存储的路径dir
 
-    @Generated(hash = 646145297)
-    public EquipmentDao(Long id, String photo_fdjbh, String photo_ccbh,
-                        String photo_rjhy, String name, String brand, String engine_id,
-                        String manufacturer, String factory_id, String remark, boolean sell,
+
+    public EquipmentDao(String photo_fdjbh, String photo_ccbh,
+                        String photo_rjhy, String name, String engine_id,
+                        String factory_id, String remark, boolean sell,
                         boolean payment, String date, String phone) {
+        this.photo_fdjbh = photo_fdjbh;
+        this.photo_ccbh = photo_ccbh;
+        this.photo_rjhy = photo_rjhy;
+        this.name = name;
+        this.engine_id = engine_id;
+        this.factory_id = factory_id;
+        this.remark = remark;
+        this.sell = sell;
+        this.payment = payment;
+        this.date = date;
+        this.phone = phone;
+        this.dirPath = name + engine_id;
+    }
+
+
+    @Generated(hash = 1864686661)
+    public EquipmentDao(Long id, String photo_fdjbh, String photo_ccbh, String photo_rjhy,
+                        String name, String engine_id, String factory_id, String remark, boolean sell,
+                        boolean payment, String date, String phone, String dirPath) {
         this.id = id;
         this.photo_fdjbh = photo_fdjbh;
         this.photo_ccbh = photo_ccbh;
         this.photo_rjhy = photo_rjhy;
         this.name = name;
-        this.brand = brand;
         this.engine_id = engine_id;
-        this.manufacturer = manufacturer;
         this.factory_id = factory_id;
         this.remark = remark;
         this.sell = sell;
         this.payment = payment;
         this.date = date;
         this.phone = phone;
+        this.dirPath = dirPath;
     }
+
 
     @Generated(hash = 775307577)
     public EquipmentDao() {
-    }
-
-
-    public EquipmentDao(String photo_fdjbh, String photo_ccbh,
-                        String photo_rjhy, String name, String brand, String engine_id,
-                        String manufacturer, String factory_id, String remark, boolean sell,
-                        boolean payment, String date, String phone) {
-        this.photo_fdjbh = photo_fdjbh;
-        this.photo_ccbh = photo_ccbh;
-        this.photo_rjhy = photo_rjhy;
-        this.name = name;
-        this.brand = brand;
-        this.engine_id = engine_id;
-        this.manufacturer = manufacturer;
-        this.factory_id = factory_id;
-        this.remark = remark;
-        this.sell = sell;
-        this.payment = payment;
-        this.date = date;
-        this.phone = phone;
     }
 
 
@@ -99,7 +118,6 @@ public class EquipmentDao {
     }
 
 
-
     public String getName() {
         return this.name;
     }
@@ -108,13 +126,6 @@ public class EquipmentDao {
         this.name = name;
     }
 
-    public String getBrand() {
-        return this.brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
 
     public String getEngine_id() {
         return this.engine_id;
@@ -124,17 +135,6 @@ public class EquipmentDao {
         this.engine_id = engine_id;
     }
 
-    public String getManufacturer() {
-        return this.manufacturer;
-    }
-
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
-    }
-
-    public String getFactory_id() {
-        return this.factory_id;
-    }
 
     public void setFactory_id(String factory_id) {
         this.factory_id = factory_id;
@@ -203,6 +203,21 @@ public class EquipmentDao {
 
     public void setPhoto_rjhy(String photo_rjhy) {
         this.photo_rjhy = photo_rjhy;
+    }
+
+
+    public String getFactory_id() {
+        return this.factory_id;
+    }
+
+
+    public String getDirPath() {
+        return this.dirPath;
+    }
+
+
+    public void setDirPath(String dirPath) {
+        this.dirPath = dirPath;
     }
 
 }

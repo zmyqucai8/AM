@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -27,7 +26,6 @@ import com.qiaotouxi.am.business.customer.CustomerSelectActivity;
 import com.qiaotouxi.am.business.dao.CustomerDao;
 import com.qiaotouxi.am.business.dao.DaoUtils;
 import com.qiaotouxi.am.business.dao.EquipmentDao;
-import com.qiaotouxi.am.business.dao.EquipmentDaoDao;
 import com.qiaotouxi.am.framework.base.BaseActivity;
 import com.qiaotouxi.am.framework.base.Constant;
 import com.qiaotouxi.am.framework.utils.AmUtlis;
@@ -63,10 +61,8 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
     View line;
     @BindView(R.id.et_name)
     EditText etName;
-    @BindView(R.id.tv_pp)
-    EditText tvPp;
-    @BindView(R.id.et_cj)
-    EditText etCj;
+
+
     @BindView(R.id.et_ccbh)
     EditText etCcbh;
     @BindView(R.id.et_fdjbh)
@@ -116,6 +112,7 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
     EquipmentDao mEquipmentDao;
     private int mStartType;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -144,6 +141,10 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
                 Bitmap bitmap = BitmapUtils.getDiskBitmap(imgPathRjhy);
                 if (null != bitmap)
                     img_rjhy.setImageBitmap(bitmap);
+                else {
+
+                    img_rjhy.setImageResource(R.drawable.img_splash1);
+                }
             }
             btnSell.setVisibility(View.GONE);
 
@@ -158,19 +159,26 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
             Bitmap bitmap = BitmapUtils.getDiskBitmap(imgPathCcbh);
             if (null != bitmap)
                 img_ccbh.setImageBitmap(bitmap);
+            else {
+
+                img_ccbh.setImageResource(R.drawable.img_splash1);
+            }
         }
         if (!TextUtils.isEmpty(mEquipmentDao.getPhoto_fdjbh())) {
             imgPathFdjbh = mEquipmentDao.getPhoto_fdjbh();
             Bitmap bitmap = BitmapUtils.getDiskBitmap(imgPathFdjbh);
             if (null != bitmap)
                 img_fdjbh.setImageBitmap(bitmap);
+            else {
+
+                img_fdjbh.setImageResource(R.drawable.img_splash1);
+            }
         }
 
 
         //设置名称 品牌 厂家 出厂编号 发动机编号 备注信息
         etName.setText(mEquipmentDao.getName());
-        tvPp.setText(mEquipmentDao.getBrand());
-        etCj.setText(mEquipmentDao.getManufacturer());
+
         etCcbh.setText(mEquipmentDao.getFactory_id());
         etFdjbh.setText(mEquipmentDao.getEngine_id());
         etBzxx.setText(mEquipmentDao.getRemark());
@@ -317,19 +325,10 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
 
         String name = etName.getText().toString();
         if (TextUtils.isEmpty(name)) {
-            AmUtlis.showToast("请填写名称");
+            AmUtlis.showToast("请填写品牌型号");
             return;
         }
-        String pinpai = tvPp.getText().toString();
-        if (TextUtils.isEmpty(name)) {
-            AmUtlis.showToast("请填写品牌");
-            return;
-        }
-        String changjia = etCj.getText().toString();
-        if (TextUtils.isEmpty(name)) {
-            AmUtlis.showToast("请填写厂家");
-            return;
-        }
+
         String ccbh = etCcbh.getText().toString();
         if (TextUtils.isEmpty(name)) {
             AmUtlis.showToast("请填写出厂编号");
@@ -341,58 +340,54 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
             return;
         }
         String bzxx = etBzxx.getText().toString();
-        EquipmentDaoDao equipmentDaoDao = App.getDaoSession(this).getEquipmentDaoDao();
-        EquipmentDao unique = equipmentDaoDao.queryRawCreate("where ENGINE_ID=? order by ENGINE_ID", fdjbh).unique();
-        if (unique != null && unique.getEngine_id().equals(fdjbh)) {
-            //更新数据
-            unique.setPhoto_ccbh(imgPathCcbh);
-            unique.setPhoto_fdjbh(imgPathFdjbh);
-            unique.setPhoto_rjhy(imgPathRjhy);
-            unique.setName(name);
-            unique.setBrand(pinpai);
-            unique.setEngine_id(fdjbh);
-            unique.setManufacturer(changjia);
-            unique.setFactory_id(ccbh);
-            unique.setRemark(bzxx);
-            unique.setSell(sell);
-            unique.setPhone(phone);
-            unique.setPayment(payment);
-            unique.setDate(date);
-            equipmentDaoDao.update(unique);
+//        EquipmentDaoDao equipmentDaoDao = App.getDaoSession(this).getEquipmentDaoDao();
+//        EquipmentDao unique = equipmentDaoDao.queryRawCreate("where ENGINE_ID=? order by ENGINE_ID", fdjbh).unique();
+//        if (unique != null && unique.getEngine_id().equals(fdjbh)) {
+//            //更新数据
+        mEquipmentDao.setPhoto_ccbh(imgPathCcbh);
+        mEquipmentDao.setPhoto_fdjbh(imgPathFdjbh);
+        mEquipmentDao.setPhoto_rjhy(imgPathRjhy);
+        mEquipmentDao.setName(name);
+        mEquipmentDao.setEngine_id(fdjbh);
+        mEquipmentDao.setFactory_id(ccbh);
+        mEquipmentDao.setRemark(bzxx);
+        mEquipmentDao.setSell(sell);
+        mEquipmentDao.setPhone(phone);
+        mEquipmentDao.setPayment(payment);
+        mEquipmentDao.setDate(date);
+        App.getDaoSession(EquipmentDetailsActivity.this).getEquipmentDaoDao().update(mEquipmentDao);
 
-            //更新客户信息
-            if (null != customer && sell) {
-                customer.setBuy(true);
-                String engine_id_list = customer.getEngine_id_list();
+        //更新客户信息
+        if (null != customer && sell) {
+            customer.setBuy(true);
+            String engine_id_list = customer.getEngine_id_list();
 
-                StringBuilder engineIDs = new StringBuilder();
-                if (!TextUtils.isEmpty(engine_id_list)) {
-                    engineIDs.append(engine_id_list);
-                    engineIDs.append("," + fdjbh);
-                } else {
-                    engineIDs.append(fdjbh);
-                }
-                customer.setEngine_id_list(engineIDs.toString());
-                DaoUtils.updateCustomerDao(EquipmentDetailsActivity.this, customer);
-                if ("保存修改".equals(btnSave.getText().toString())) {
-                    AmUtlis.showToast("修改成功");
-                } else {
-                    AmUtlis.showToast("出售成功");
-                }
+            StringBuilder engineIDs = new StringBuilder();
+            if (!TextUtils.isEmpty(engine_id_list)) {
+                engineIDs.append(engine_id_list);
+                engineIDs.append("," + fdjbh);
             } else {
-                AmUtlis.showToast("保存成功");
+                engineIDs.append(fdjbh);
             }
-            if (sell) {
-                AmUtlis.refreshEquipmentManageData(Constant.EQUIPMENT_SOLD_NO);
-                AmUtlis.refreshEquipmentManageData(Constant.EQUIPMENT_SOLD_YES);
+            customer.setEngine_id_list(engineIDs.toString());
+            DaoUtils.updateCustomerDao(EquipmentDetailsActivity.this, customer);
+            if ("保存修改".equals(btnSave.getText().toString())) {
+                AmUtlis.showToast("修改成功");
             } else {
-                AmUtlis.refreshEquipmentManageData(mStartType);
+                AmUtlis.showToast("出售成功");
             }
-
-            finish();
         } else {
-            AmUtlis.showToast("保存失败");
+            AmUtlis.showToast("保存成功");
         }
+        if (sell) {
+
+            AmUtlis.refreshEquipmentManageData(Constant.EQUIPMENT_SOLD_YES);
+        }
+        AmUtlis.refreshEquipmentManageData(Constant.EQUIPMENT_SOLD_NO);
+        finish();
+//        } else {
+//            AmUtlis.showToast("保存失败");
+//        }
 
 
     }
@@ -402,17 +397,17 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
      */
     private void setImgShow(Bitmap b) {
         if (photoType == Constant.PHOTO_FDJBH) {//发动机编号照片
-            AmUtlis.deleteFile(imgPathFdjbh);
-            imgPathFdjbh = BitmapUtils.save(b, BitmapUtils.IMG_TYPE_FDJBH);
+//            AmUtlis.deleteFile(imgPathFdjbh);
+            imgPathFdjbh = BitmapUtils.saveImg(b, mEquipmentDao.getDirPath(), BitmapUtils.IMG_TYPE_FDJBH);
             img_fdjbh.setImageBitmap(b);
 
         } else if (photoType == Constant.PHOTO_CCBH) {//出厂编号照片
-            AmUtlis.deleteFile(imgPathCcbh);
-            imgPathCcbh = BitmapUtils.save(b, BitmapUtils.IMG_TYPE_CCBH);
+//            AmUtlis.deleteFile(imgPathCcbh);
+            imgPathCcbh = BitmapUtils.saveImg(b, mEquipmentDao.getDirPath(), BitmapUtils.IMG_TYPE_CCBH);
             img_ccbh.setImageBitmap(b);
         } else if (photoType == Constant.PHOTO_RJHY) {//人机合影照片
-            AmUtlis.deleteFile(imgPathRjhy);
-            imgPathRjhy = BitmapUtils.save(b, BitmapUtils.IMG_TYPE_RJHY);
+//            AmUtlis.deleteFile(imgPathRjhy);
+            imgPathRjhy = BitmapUtils.saveImg(b, mEquipmentDao.getDirPath(), BitmapUtils.IMG_TYPE_RJHY);
             img_rjhy.setImageBitmap(b);
 
         }
@@ -455,12 +450,18 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
             }
             Bitmap bitmap = null;
             if (photoType == Constant.PHOTO_FDJBH) {
-                bitmap = BitmapFactory.decodeFile(imgPathFdjbh);
+                bitmap = BitmapUtils.getDiskBitmap(imgPathFdjbh);
             } else if (photoType == Constant.PHOTO_CCBH) {
-                bitmap = BitmapFactory.decodeFile(imgPathCcbh);
+                bitmap = BitmapUtils.getDiskBitmap(imgPathCcbh);
             } else if (photoType == Constant.PHOTO_RJHY) {
-                bitmap = BitmapFactory.decodeFile(imgPathRjhy);
+                bitmap = BitmapUtils.getDiskBitmap(imgPathRjhy);
             }
+
+            if (bitmap == null) {
+                AmUtlis.showToast("图片被删除或不存在");
+                return;
+            }
+
             setImgShow(bitmap);
 
         } else if (data != null && requestCode == Constant.CUSTMER_SELECT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
@@ -556,7 +557,24 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
 
     @Override
     public void onBackPressed() {
+
         AmUtlis.showCloseAlert(EquipmentDetailsActivity.this);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //如果没有保存数据
+
+        if (!TextUtils.isEmpty(imgPathCcbh) && !imgPathCcbh.equals(mEquipmentDao.getPhoto_ccbh())) {
+            AmUtlis.deleteFile(imgPathCcbh);
+        }
+        if (!TextUtils.isEmpty(imgPathFdjbh) && !imgPathFdjbh.equals(mEquipmentDao.getPhoto_fdjbh())) {
+            AmUtlis.deleteFile(imgPathFdjbh);
+        }
+        if (!TextUtils.isEmpty(imgPathRjhy) && !imgPathRjhy.equals(mEquipmentDao.getPhoto_rjhy())) {
+            AmUtlis.deleteFile(imgPathRjhy);
+        }
     }
 }
