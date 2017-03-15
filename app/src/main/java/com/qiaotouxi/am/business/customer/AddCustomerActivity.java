@@ -27,6 +27,7 @@ import com.qiaotouxi.am.framework.base.BaseActivity;
 import com.qiaotouxi.am.framework.base.Constant;
 import com.qiaotouxi.am.framework.utils.AmUtlis;
 import com.qiaotouxi.am.framework.utils.BitmapUtils;
+import com.qiaotouxi.am.framework.utils.FileUtils;
 import com.qiaotouxi.am.framework.view.PhotoPop;
 
 import java.util.Date;
@@ -40,7 +41,6 @@ import butterknife.ButterKnife;
  * 添加客户页面
  */
 public class AddCustomerActivity extends BaseActivity implements View.OnClickListener {
-
     @BindView(R.id.tv_title)
     TextView tvTitle;
     @BindView(R.id.img_tx)
@@ -71,7 +71,6 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
     Button btnSave;
     @BindView(R.id.btn_delete)
     Button btnDelete;
-
     /**
      * 拍照返回图片路径
      */
@@ -111,7 +110,6 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
      * 保存客户数据
      */
     private void saveData() {
-
         if (b == null) {
             AmUtlis.showToast("请上传照片");
             return;
@@ -132,15 +130,7 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
 //            return;
 //        }
         String location = etLocation.getText().toString();
-//        if(TextUtils.isEmpty(cardId)){
-//            AmUtlis.showToast("请填写联系地址");
-//            return;
-//        }
         String bzxx = etBzxx.getText().toString();
-//        if(TextUtils.isEmpty(cardId)){
-//            AmUtlis.showToast("请填写备注信息");
-//            return;
-//        }
         int sex = -1;//1=男， 0=女
         boolean checkedFemale = rbFemale.isChecked();
         boolean checkedMale = rbMale.isChecked();
@@ -157,7 +147,6 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
 
         imgPath = BitmapUtils.saveImg(b, name + phone, BitmapUtils.IMG_TYPE_KHTX);
         CustomerDao dao = new CustomerDao();
-//        name, phone, cardId, location, imgPath, bzxx, sex, false, new Date()
         dao.setName(name);
         dao.setPhone(phone);
         dao.setCardId(cardId);
@@ -180,6 +169,9 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
         try {
             customerDaoDao.insert(dao);
             AmUtlis.showToast("添加成功");
+            //写入资料到txt文件
+            String text = "姓名：" + name + "\r\n性别：" + (sex == 1 ? "男" : "女") + "\r\n电话：" + phone + "\r\n身份证：" + cardId + "\r\n联系地址：" + location + "\r\n备注信息：" + bzxx;
+            FileUtils.writeTxt(BitmapUtils.getFilePath() + name + phone + "/" + "客户资料.txt", text);
             AmUtlis.refreshCustomerManageData();
             finish();
         } catch (Exception e) {
@@ -221,11 +213,7 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
                 AmUtlis.showToast("图片已被删除，或不存在");
                 return;
             }
-
             imgTx.setImageBitmap(b);
-
-//            imgPath = BitmapUtils.save(bitmap, BitmapUtils.IMG_TYPE_KHTX);
-//            AmUtlis.showLog("imgPath=" + imgPath);
         }
 
     }

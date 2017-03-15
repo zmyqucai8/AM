@@ -21,9 +21,8 @@ import com.qiaotouxi.am.framework.utils.AmUtlis;
 /**
  * @Created by zmy.
  * @Date 2017/3/2 0002.
- * @Describe
+ * 相册选择 拍照上传popupwindow
  */
-
 public class PhotoPop implements View.OnClickListener {
 
     public static PhotoPop mPhotoPop;
@@ -31,6 +30,8 @@ public class PhotoPop implements View.OnClickListener {
     private Activity mAct;
     //只能显示一个的约束 默认可以显示
     private boolean isShow = true;
+    //跳转标记
+    public static int startTag;
 
     /**
      * 获取实例
@@ -86,7 +87,6 @@ public class PhotoPop implements View.OnClickListener {
 
     }
 
-    public static int startTag;
 
     @Override
     public void onClick(View v) {

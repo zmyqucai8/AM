@@ -19,27 +19,27 @@ import java.util.List;
 /**
  * @Created by zmy.
  * @Date 2017/3/6 0006.
- * <p>
- * 设备管理列表适配器，包含 未出售与 已出售
+ * 设备管理列表适配器， 未出售 与 已出售公用
  */
-
-
 public class EquipmentSoldAdapter extends BaseQuickAdapter<EquipmentDao, BaseViewHolder> {
 
+    private Context mContext;
+    private List<EquipmentDao> mData;
 
-    Context mContext;
-    List<EquipmentDao> mData;
-
+    /**
+     * 构造方法
+     *
+     * @param context
+     * @param data
+     */
     public EquipmentSoldAdapter(Context context, List<EquipmentDao> data) {
         super(R.layout.item_equipment, data);
         this.mContext = context;
         this.mData = data;
-
     }
 
     @Override
     protected void convert(final BaseViewHolder holder, final EquipmentDao bean) {
-
         //基本信息
         holder
                 .setText(R.id.tv_name, "品牌　型号： " + bean.getName())

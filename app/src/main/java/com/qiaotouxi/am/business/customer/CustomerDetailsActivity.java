@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -30,6 +31,7 @@ import com.qiaotouxi.am.framework.base.BaseActivity;
 import com.qiaotouxi.am.framework.base.Constant;
 import com.qiaotouxi.am.framework.utils.AmUtlis;
 import com.qiaotouxi.am.framework.utils.BitmapUtils;
+import com.qiaotouxi.am.framework.utils.FileUtils;
 import com.qiaotouxi.am.framework.view.PhotoPop;
 
 import java.util.List;
@@ -74,9 +76,10 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
     Button btnSave;
     @BindView(R.id.btn_delete)
     Button btnDelete;
-    private CustomerDao mCustomerDao;
-    private EquipmentSoldAdapter mAdapter;
+    private CustomerDao mCustomerDao;//当前客户dao
+    private EquipmentSoldAdapter mAdapter;//购机历史adapter
     private String imgPath;// 拍照返回图片路径
+    private boolean isShowAlert = true;//提示框显示约束
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +112,7 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
         etCardID.setText(mCustomerDao.getCardId());
         etLocation.setText(mCustomerDao.getLocation());
         etBzxx.setText(mCustomerDao.getRemark());
+        //设置性别
         if (mCustomerDao.getSex() == 0) {
             rbFemale.setChecked(true);
             rbMale.setChecked(false);
@@ -128,8 +132,14 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
             mAdapter.isFirstOnly(true);
             mAdapter.openLoadAnimation(BaseQuickAdapter.SCALEIN);
             mRecyclerView.setAdapter(mAdapter);
+            if (equipmentByIDs.size() > 1) {
+                ViewGroup.LayoutParams layoutParams = mRecyclerView.getLayoutParams();
+                layoutParams.height = AmUtlis.dp2px(300);
+                mRecyclerView.setLayoutParams(layoutParams);
+            }
 
         }
+        //点击事件
         imgTx.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
         btnSave.setOnClickListener(this);
@@ -152,7 +162,6 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
         }
     }
 
-    private boolean isShowAlert = true;
 
     /**
      * 删除客户
@@ -221,15 +230,9 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
 //            return;
 //        }
         String location = etLocation.getText().toString();
-//        if(TextUtils.isEmpty(cardId)){
-//            AmUtlis.showToast("请填写联系地址");
-//            return;
-//        }
+
         String bzxx = etBzxx.getText().toString();
-//        if(TextUtils.isEmpty(cardId)){
-//            AmUtlis.showToast("请填写备注信息");
-//            return;
-//        }
+
         int sex = -1;//1=男， 0=女
         boolean checkedFemale = rbFemale.isChecked();
         boolean checkedMale = rbMale.isChecked();
@@ -243,9 +246,7 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
                 sex = 1;
             }
         }
-//        CustomerDaoDao dao = App.getDaoSession(this).getCustomerDaoDao();
-//        CustomerDao unique = DaoUtils.getCustomerByPhone(CustomerDetailsActivity.this, phone);
-//        if (unique != null && unique.getPhone().equals(phone)) {
+
         //更新数据
         mCustomerDao.setPhoto_path(imgPath);
         mCustomerDao.setName(name);
@@ -254,14 +255,11 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
         mCustomerDao.setRemark(bzxx);
         mCustomerDao.setSex(sex);
         mCustomerDao.setLocation(location);
-//        dao.update(mCustomerDao);
         DaoUtils.updateCustomerDao(this, mCustomerDao);
         AmUtlis.showToast("修改成功");
+        String text = "姓名：" + name + "\r\n性别：" + (sex == 1 ? "男" : "女") + "\r\n电话：" + phone + "\r\n身份证：" + cardId + "\r\n联系地址：" + location + "\r\n备注信息：" + bzxx;
+        FileUtils.writeTxt(BitmapUtils.getFilePath() + mCustomerDao.getDirPath() + "/" + "客户资料.txt", text);
         AmUtlis.refreshCustomerManageData();
-//        } else {
-//            AmUtlis.showToast("修改失败");
-//        }
-
     }
 
     @Override
@@ -302,6 +300,5 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
     @Override
     public void onBackPressed() {
         AmUtlis.showCloseAlert(CustomerDetailsActivity.this);
-
     }
 }

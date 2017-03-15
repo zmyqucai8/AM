@@ -1,9 +1,4 @@
-package com.qiaotouxi.am.framework.utils;/*
-
-
-/**
- * Created by NO3 on 2015/3/7.
- */
+package com.qiaotouxi.am.framework.utils;
 
 
 import android.graphics.Bitmap;
@@ -16,7 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
- * 图片处理工具类.
+ * 农机管理 图片处理工具类.
  */
 public class BitmapUtils {
 
@@ -64,49 +59,9 @@ public class BitmapUtils {
      *
      * @return
      */
-    public static String getPhotoPath() {
+    public static String getFilePath() {
 
         return Environment.getExternalStorageDirectory() + DIR;
-    }
-
-    /**
-     * 保存bitm到sdk
-     *
-     * @param btImage
-     * @return 返回保存路径
-     * @nameLetter 图片名字的首字母
-     */
-    public static String save(Bitmap btImage, String nameLetter) {
-        String path = "";
-        if (SDCardHelper.isSDCardMounted()) // 判断是否可以对SDcard进行操作
-        {    // 获取SDCard指定目录下
-
-            FileOutputStream out = null;
-            String sdCardDir = Environment.getExternalStorageDirectory() + DIR;
-
-            File dirFile = new File(sdCardDir);  //目录转化成文件夹
-            if (!dirFile.exists()) {              //如果不存在，那就建立这个文件夹
-                dirFile.mkdirs();
-            }                          //文件夹有啦，就可以保存图片啦
-            File file = new File(sdCardDir, nameLetter + System.currentTimeMillis() + ".jpg");// 在SDcard的目录下创建图片文,以当前时间为其命名
-            path = file.getAbsolutePath();
-            try {
-                out = new FileOutputStream(file);
-                btImage.compress(Bitmap.CompressFormat.JPEG, 90, out);
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            try {
-                out.flush();
-                out.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            AmUtlis.showLog("文件保存成功=" + path);
-        }
-        return path;
     }
 
 
@@ -120,7 +75,7 @@ public class BitmapUtils {
      */
     public static String saveImg(Bitmap btImage, String dir, String nameLetter) {
         String path = "";
-        if (SDCardHelper.isSDCardMounted()) // 判断是否可以对SDcard进行操作
+        if (SDCardUtils.isSDCardMounted()) // 判断是否可以对SDcard进行操作
         {    // 获取SDCard指定目录下
 
 

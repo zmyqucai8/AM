@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bigkoo.alertview.AlertView;
+import com.bigkoo.alertview.OnDismissListener;
 import com.bigkoo.alertview.OnItemClickListener;
 import com.qiaotouxi.am.App;
 import com.qiaotouxi.am.R;
@@ -47,11 +48,9 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 
 /**
- * Created by Yyyyyyy on 2017/2/28.
+ * 农机管理 自定义工具类
  */
 public class AmUtlis {
-
-
     /**
      * 获取ttf字体库
      *
@@ -502,7 +501,6 @@ public class AmUtlis {
         }
     }
 
-
     /**
      * 删除单个文件
      *
@@ -545,6 +543,7 @@ public class AmUtlis {
 
     /**
      * dp转px
+     *
      * @param context
      * @param dp
      * @return
@@ -630,4 +629,70 @@ public class AmUtlis {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         activity.startActivity(Intent.createChooser(intent, activityTitle));
     }
+
+
+    /**
+     * 查看txt文本弹框
+     */
+    public static void showTxtAlert(Activity context, String title, final String txt) {
+        if (isShowAlert) {
+            isShowAlert = false;
+            new AlertView(title, txt, null, new String[]{"关闭"}, null, context,
+                    AlertView.Style.Alert, null).setOnDismissListener(new OnDismissListener() {
+                @Override
+                public void onDismiss(Object o) {
+                    isShowAlert = true;
+                }
+            }).show();
+        }
+    }
+
+    /**
+     * 查看jpg文件弹框
+     */
+    public static void showJpgtAlert(final Activity context, final File file) {
+        if (isShowAlert) {
+            isShowAlert = false;
+            new AlertView.Builder().setContext(context)
+                    .setStyle(AlertView.Style.Alert)
+                    .setTitle("图片")
+                    .setMessage("请选择")
+                    .setCancelText("取消")
+                    .setDestructive("发送", "查看大图")
+
+                    .setOthers(null)
+                    .setOnItemClickListener(new OnItemClickListener() {
+                        @Override
+                        public void onItemClick(Object o, int position) {
+                            isShowAlert = true;
+                            if (position == 0) {
+                                AmUtlis.shareMsg(context, "发送到?", "发送图片", "图片", file.getAbsolutePath());
+                            } else if (position == 1) {
+                                Intent it = new Intent(Intent.ACTION_VIEW);
+                                it.setDataAndType(Uri.fromFile(file), "image/*");
+                                context.startActivity(it);
+                            }
+                        }
+                    })
+                    .build()
+                    .show();
+
+
+        }
+    }
+
+
+    /**
+     * 打开系统图片浏览器
+     *
+     * @param activity
+     * @param file
+     */
+    public static void openPicture(Activity activity, File file) {
+        Intent it = new Intent(Intent.ACTION_VIEW);
+        it.setDataAndType(Uri.fromFile(file), "image/*");
+        activity.startActivity(it);
+    }
+
+
 }

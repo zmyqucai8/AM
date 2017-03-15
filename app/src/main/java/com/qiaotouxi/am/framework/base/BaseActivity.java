@@ -6,10 +6,16 @@ import android.support.v4.app.FragmentActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
- * Created by Yyyyyyy on 2017/2/28.
+ * @Created by zmy.
+ * @Date 2017/3/2 0002.
+ * 基类activity
  */
 public class BaseActivity extends FragmentActivity {
+    /**
+     * activity集合
+     */
     public static List<BaseActivity> activities = new ArrayList<BaseActivity>();
 
     @Override

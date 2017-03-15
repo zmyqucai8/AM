@@ -27,12 +27,12 @@ import de.greenrobot.event.EventBus;
  * @Date 2017/3/1 0001.
  * 设备未出售 列表
  */
-
 public class EquipmentSoldNoFragment extends BaseFragment {
-    EquipmentSoldAdapter mAdapter;
+
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
+    private EquipmentSoldAdapter mAdapter;//设备列表adapter
 
     @Override
     protected View initView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

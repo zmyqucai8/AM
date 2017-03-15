@@ -23,6 +23,7 @@ import com.qiaotouxi.am.framework.base.BaseActivity;
 import com.qiaotouxi.am.framework.base.Constant;
 import com.qiaotouxi.am.framework.utils.AmUtlis;
 import com.qiaotouxi.am.framework.utils.BitmapUtils;
+import com.qiaotouxi.am.framework.utils.FileUtils;
 import com.qiaotouxi.am.framework.view.PhotoPop;
 
 import butterknife.BindView;
@@ -31,11 +32,9 @@ import butterknife.ButterKnife;
 /**
  * @Created by zmy.
  * @Date 2017/3/1 0001.
- * 添加设备页面w
+ * 添加设备页面
  */
-
 public class AddEquipmentActivity extends BaseActivity implements View.OnClickListener {
-
     @BindView(R.id.tv_title)
     TextView tvTitle;
     @BindView(R.id.line)
@@ -58,6 +57,8 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
     private String imgPathCcbh;//出厂编号返回的photo
     //当前选择的照片类型
     private int photoType = -1;
+    private Bitmap fdjbhBitmap; //发动机编号bitmap
+    private Bitmap ccbhBitmap;//出厂编号bitmap 即用户选择的图片
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +68,6 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
         initView();
     }
 
-
     /**
      * 初始化view
      */
@@ -75,9 +75,7 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
         img_ccbh.setOnClickListener(this);
         img_fdjbh.setOnClickListener(this);
         btnSave.setOnClickListener(this);
-
     }
-
 
     @Override
     public void onClick(View v) {
@@ -93,16 +91,13 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
             case R.id.btn_save:
                 save();
                 break;
-
         }
-
     }
 
     /**
      * 保存设备
      */
     private void save() {
-
         if (ccbhBitmap == null) {
             AmUtlis.showToast("请上传出厂编号照片");
             return;
@@ -119,7 +114,6 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
             AmUtlis.showToast("请填写品牌型号");
             return;
         }
-
         String ccbh = etCcbh.getText().toString();
         if (TextUtils.isEmpty(ccbh)) {
             AmUtlis.showToast("请填写出厂编号");
@@ -134,7 +128,6 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
         imgPathCcbh = BitmapUtils.saveImg(ccbhBitmap, name + fdjbh, BitmapUtils.IMG_TYPE_CCBH);
         imgPathFdjbh = BitmapUtils.saveImg(fdjbhBitmap, name + fdjbh, BitmapUtils.IMG_TYPE_FDJBH);
 
-
         EquipmentDao dao = new EquipmentDao(imgPathFdjbh, imgPathCcbh, "", name, fdjbh, ccbh, bzxx, false, false, "", "");
         EquipmentDaoDao equipmentDaoDao = App.getDaoSession(this).getEquipmentDaoDao();
         try {
@@ -147,14 +140,14 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
             }
             equipmentDaoDao.insert(dao);
             AmUtlis.showToast("添加成功");
+            String text = "品牌型号：" + name + "\r\n出厂编号：" + ccbh + "\r\n发动机编号：" + fdjbh + "\r\n备注信息：" + bzxx;
+            FileUtils.writeTxt(BitmapUtils.getFilePath() + name + fdjbh + "/" + name + ".txt", text);
             AmUtlis.refreshEquipmentManageData(Constant.EQUIPMENT_SOLD_NO);
             finish();
         } catch (Exception e) {
             AmUtlis.showToast("添加失败");
         }
-
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -197,12 +190,9 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
             }
             setImgShow(bitmap);
         }
-
     }
 
 
-    private Bitmap fdjbhBitmap;
-    private Bitmap ccbhBitmap;
     /**
      * 设置img显示， 根据选择类型
      */
@@ -210,13 +200,11 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
         if (photoType == Constant.PHOTO_FDJBH) {
             AmUtlis.deleteFile(imgPathFdjbh);
             fdjbhBitmap = b;
-//            imgPathFdjbh = BitmapUtils.save(b, BitmapUtils.IMG_TYPE_FDJBH);
             img_fdjbh.setImageBitmap(b);
 
         } else if (photoType == Constant.PHOTO_CCBH) {
             AmUtlis.deleteFile(imgPathCcbh);
             ccbhBitmap = b;
-//            imgPathCcbh = BitmapUtils.save(b, BitmapUtils.IMG_TYPE_CCBH);
             img_ccbh.setImageBitmap(b);
         }
     }

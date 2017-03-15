@@ -36,8 +36,6 @@ import de.greenrobot.event.EventBus;
  * 客户管理fragment
  */
 public class CustomerManageFragment extends BaseFragment implements View.OnClickListener {
-
-
     @BindView(R.id.et_input)
     EditText etInput;
     @BindView(R.id.tv_search_ttf)
@@ -51,17 +49,13 @@ public class CustomerManageFragment extends BaseFragment implements View.OnClick
     @BindView(R.id.qib)
     QuickIndexBar QIBar;
     private LinearLayoutManager manager;
-    CustomerManageAdapter adapter;
-    List<CustomerDao> allCustomerData;
-
-
-    /**
-     * 构造方法， 需要一个type 来表示是在设备管理页面显示， 还是在出售设备选择客户时显示
-     *
-     * @param isSelect
-     */
+    private CustomerManageAdapter adapter;//客户管理adapter
+    private List<CustomerDao> allCustomerData;//所有客户数据集合
     private boolean isSelect;
-
+    /**
+     *  需要一个type 来表示是在设备管理页面显示， 还是在出售设备选择客户时显示
+     * @param isSelect =ture, 选择页面显示 false 客户管理显示
+     */
     public void setIsSelect(boolean isSelect) {
         this.isSelect = isSelect;
     }

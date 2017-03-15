@@ -3,11 +3,9 @@ package com.qiaotouxi.am.framework.base;
 /**
  * @Created by zmy.
  * @Date 2017/3/1 0001.
- * @Describe
+ * 常量类
  */
-
 public class Constant {
-
     /**
      * 权限请求回调
      */
@@ -32,8 +30,6 @@ public class Constant {
      * 设备管理
      */
     public static final int TYPE_EQUIPMENT = 0;
-
-
     /**
      * 设备已出售
      */
@@ -68,7 +64,6 @@ public class Constant {
      * 跳转客户选择的rquestCode
      */
     public static final int CUSTMER_SELECT_REQUEST_CODE = 105;
-
 
     /**
      * 照片类型，

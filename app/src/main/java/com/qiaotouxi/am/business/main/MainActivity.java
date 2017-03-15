@@ -1,9 +1,15 @@
 package com.qiaotouxi.am.business.main;
 
+import android.Manifest;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -14,13 +20,11 @@ import android.widget.Toast;
 import com.qiaotouxi.am.R;
 import com.qiaotouxi.am.business.customer.AddCustomerActivity;
 import com.qiaotouxi.am.business.customer.CustomerManageFragment;
-import com.qiaotouxi.am.business.dao.DaoUtils;
 import com.qiaotouxi.am.business.equipment.AddEquipmentActivity;
 import com.qiaotouxi.am.business.equipment.EquipmentManageFragment;
 import com.qiaotouxi.am.framework.base.BaseActivity;
 import com.qiaotouxi.am.framework.base.Constant;
 import com.qiaotouxi.am.framework.utils.AmUtlis;
-import com.qiaotouxi.am.framework.utils.SPUtils;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -64,35 +68,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @BindColor(R.color.colorPrimaryDark)
     int text_blue;
 
-    private EquipmentManageFragment mEquipmentManage;
-    private CustomerManageFragment mCustomerManage;
+    private EquipmentManageFragment mEquipmentManage; //设备管理fragment
+    private CustomerManageFragment mCustomerManage;//客户管理fragment
     private int mType = -1;//当前显示的fragment类型
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        setDefaultData();//TODO：设置默认数据，只会设置一次，发布请删除
         if (savedInstanceState != null) {
             mEquipmentManage = (EquipmentManageFragment) getFragmentManager().findFragmentByTag("mEquipmentManage");
             mCustomerManage = (CustomerManageFragment) getFragmentManager().findFragmentByTag("mCustomerManage");
         }
         initView();
         setFragment(Constant.TYPE_EQUIPMENT);
-
-    }
-
-
-    /**
-     * TODO：设置默认数据  只设置一次。 正式版请注释
-     */
-    private void setDefaultData() {
-
-        if (SPUtils.getisAddData(MainActivity.this)) {
-            DaoUtils.testAddCustomer(MainActivity.this);
-            DaoUtils.testAddEquipmentDao(MainActivity.this);
-            SPUtils.setisAddData(MainActivity.this, false);
-        }
     }
 
     /**
@@ -186,10 +175,61 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 startAddActivity(mType);
                 break;
             case R.id.tv_photo:
-                startActivity(new Intent(MainActivity.this, MyAlbumActivity.class));
+                checkPermissions();
                 break;
         }
     }
+
+    /**
+     * 检测权限
+     */
+    private void checkPermissions() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            int phpnePermission = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE);
+            if (phpnePermission != PackageManager.PERMISSION_GRANTED) {
+                //没有授权，去请求授权
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constant.PERMISSION_PHONE);
+                return;
+            } else {
+                //有权限， 继续跳转
+                startActivity(new Intent(MainActivity.this, MyFileActivity.class));
+            }
+        } else {
+            //版本低于23 直接跳转
+            startActivity(new Intent(MainActivity.this, MyFileActivity.class));
+        }
+
+    }
+
+    /**
+     * 请求权限后的回调。
+     *
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        switch (requestCode) {
+            case Constant.PERMISSION_PHONE:
+                if (grantResults == null || grantResults.length < 1) {
+                    //用户取消授权
+                    AmUtlis.showToast(" 授权失败");
+                    return;
+                }
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //用户授权 再次检测
+                    checkPermissions();
+                } else {
+                    //用户取消授权
+                    AmUtlis.showToast("你必须授权，才能进行下一步");
+                }
+                break;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
 
     /**
      * 跳转到添加页面 根据type判断类型

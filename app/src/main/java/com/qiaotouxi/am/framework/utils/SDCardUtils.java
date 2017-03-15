@@ -17,14 +17,12 @@ import java.io.IOException;
 /**
  * @Created by zmy.
  * @Date 2017/3/14 0014.
- * @Describe
+ * SD卡 操作工具类
  */
-
-public class SDCardHelper {
+public class SDCardUtils {
 
     // 判断SD卡是否被挂载
     public static boolean isSDCardMounted() {
-        // return Environment.getExternalStorageState().equals("mounted");
         return Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED);
     }

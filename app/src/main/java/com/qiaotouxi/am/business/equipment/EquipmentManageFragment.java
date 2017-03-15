@@ -26,11 +26,6 @@ import de.greenrobot.event.EventBus;
  * 设备管理 fragment
  */
 public class EquipmentManageFragment extends BaseFragment implements View.OnClickListener {
-
-
-    private EquipmentSoldNoFragment mEquipmentNo;
-    private EquipmentSoldYesFragment mEquipmentYes;
-    private int mType;//当前显示的fragment类型
     @BindView(R.id.tv_wcs)
     TextView tvWcs;
     @BindView(R.id.tv_ycs)
@@ -43,6 +38,10 @@ public class EquipmentManageFragment extends BaseFragment implements View.OnClic
     TextView tv_ycs_count;
     @BindView(R.id.tv_wcs_count)
     TextView tv_wcs_count;
+
+    private EquipmentSoldNoFragment mEquipmentNo;//未出售设备fragment
+    private EquipmentSoldYesFragment mEquipmentYes;//已出售设备fragment
+    private int mType;//当前显示的fragment类型
 
     @Override
     protected View initView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -58,8 +57,6 @@ public class EquipmentManageFragment extends BaseFragment implements View.OnClic
 
     @Override
     protected void initData() {
-
-
         tvYcs.setOnClickListener(this);
         tvWcs.setOnClickListener(this);
         setFragment(Constant.EQUIPMENT_SOLD_NO);

@@ -58,7 +58,7 @@ public class App extends Application {
      */
     public static DaoMaster getDaoMaster(Context context) {
         if (daoMaster == null) {
-            DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context, "xda-db", null);
+            DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context, "am-db", null);
             daoMaster = new DaoMaster(helper.getWritableDatabase());
         }
         return daoMaster;

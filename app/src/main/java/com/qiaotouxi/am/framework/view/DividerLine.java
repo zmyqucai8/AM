@@ -8,13 +8,7 @@ import android.view.View;
 
 
 /**
- * 使RecyclerView组件中间有间隙（只会设置网格的内边距）
- *
- * @author zhaogao
- */
-
-/**
- * 分隔线装饰
+ * RecyclerView分隔线
  *
  * @author youmingdot
  */

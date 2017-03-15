@@ -6,7 +6,6 @@ package com.qiaotouxi.am.business.customer;
  * 刷新设备管理的evnet
  */
 public class CostomerManageEvent {
-
     public int type;
     /**
      * 实例对象
@@ -14,7 +13,7 @@ public class CostomerManageEvent {
     public static CostomerManageEvent mEvent;
 
     /**
-     * 单列模式获取是咧
+     * 单列模式获取实例
      *
      * @return
      */
@@ -25,7 +24,5 @@ public class CostomerManageEvent {
         } else {
             return mEvent;
         }
-
     }
-
 }

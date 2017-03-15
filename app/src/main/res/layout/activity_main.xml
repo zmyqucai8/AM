@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10px"
-                android:text="&#xe60b;"
+                android:text="&#xe601;"
                 android:textSize="25sp" />
 
             <TextView
@@ -97,7 +97,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="&#xe628;"
+            android:text="&#xe7c3;"
             android:textColor="@drawable/text_white_selector"
             android:textSize="25sp" />
 

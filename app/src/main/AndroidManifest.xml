@@ -23,7 +23,7 @@
 
         </activity>
         <activity
-            android:name=".business.main.MyAlbumActivity"
+            android:name=".business.main.MyFileActivity"
             android:screenOrientation="portrait">
 
         </activity>
