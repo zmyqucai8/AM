@@ -37,11 +37,11 @@ public class BitmapUtils {
     public static Bitmap getDiskBitmap(String pathString) {
         Bitmap bitmap = null;
         BitmapFactory.Options options;
-        File file = new File(pathString);
-        if (file.exists()) {
-            bitmap = BitmapFactory.decodeFile(pathString);
-        }
-        if (bitmap == null) {
+//        File file = new File(pathString);
+//        if (file.exists()) {
+//            bitmap = BitmapFactory.decodeFile(pathString);
+//        }
+
             try {
                 options = new BitmapFactory.Options();
                 options.inSampleSize = 2;
@@ -49,7 +49,7 @@ public class BitmapUtils {
             } catch (Exception e1) {
                 AmUtlis.showLog("图片解析错误");
             }
-        }
+
 
         return bitmap;
     }
@@ -78,7 +78,6 @@ public class BitmapUtils {
         if (SDCardUtils.isSDCardMounted()) // 判断是否可以对SDcard进行操作
         {    // 获取SDCard指定目录下
 
-
             FileOutputStream out = null;
             String sdCardDir = Environment.getExternalStorageDirectory() + DIR + dir;//单独的文件夹
 
@@ -90,7 +89,7 @@ public class BitmapUtils {
             path = file.getAbsolutePath();
             try {
                 out = new FileOutputStream(file);
-                btImage.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                btImage.compress(Bitmap.CompressFormat.JPEG, 100, out);
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

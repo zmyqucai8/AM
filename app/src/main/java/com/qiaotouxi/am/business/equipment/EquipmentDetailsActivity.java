@@ -340,20 +340,19 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
         if (null != customer && sell) {
             customer.setBuy(true);
             String engine_id_list = customer.getEngine_id_list();
-            StringBuilder engineIDs = new StringBuilder();
-            if (!TextUtils.isEmpty(engine_id_list)) {
-                engineIDs.append(engine_id_list);
-                engineIDs.append("," + fdjbh);
-            } else {
-                engineIDs.append(fdjbh);
+            if (!engine_id_list.contains(fdjbh)) {//防止已出售设备修改数据时重复添加
+                StringBuilder engineIDs = new StringBuilder();
+                if (!TextUtils.isEmpty(engine_id_list)) {
+                    engineIDs.append(engine_id_list);
+                    engineIDs.append("," + fdjbh);
+                } else {
+                    engineIDs.append(fdjbh);
+                }
+                customer.setEngine_id_list(engineIDs.toString());
             }
-            customer.setEngine_id_list(engineIDs.toString());
             DaoUtils.updateCustomerDao(EquipmentDetailsActivity.this, customer);
             if ("保存修改".equals(btnSave.getText().toString())) {
                 AmUtlis.showToast("修改成功");
-                //更新设备txt文档
-                String text = "品牌型号：" + name + "\r\n出厂编号：" + ccbh + "\r\n发动机编号：" + fdjbh + "\r\n备注信息：" + bzxx;
-                FileUtils.writeTxt(BitmapUtils.getFilePath() + name + fdjbh + "/" + name + ".txt", text);
             } else {
                 //出售成功， 把设备照片移动到当前客户文件夹下,注意数据库的路径也要修改
                 String equipmentDirPath = mEquipmentDao.getDirPath();
@@ -367,6 +366,14 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
             }
         } else {
             AmUtlis.showToast("保存成功");
+        }
+
+        //更新设备txt文档
+        String text = "品牌型号：" + name + "\r\n出厂编号：" + ccbh + "\r\n发动机编号：" + fdjbh + "\r\n备注信息：" + bzxx;
+        if (sell) {
+            FileUtils.writeTxt(BitmapUtils.getFilePath() + customer.getDirPath() + "/" + mEquipmentDao.getDirPath() + ".txt", text);
+        } else {
+            FileUtils.writeTxt(BitmapUtils.getFilePath() + mEquipmentDao.getDirPath() + "/" + mEquipmentDao.getDirPath() + ".txt", text);
         }
         if (sell) {
             AmUtlis.refreshEquipmentManageData(Constant.EQUIPMENT_SOLD_YES);
@@ -397,11 +404,9 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data != null && requestCode == Constant.CAPTURE && resultCode == RESULT_OK) {
+        if (requestCode == Constant.CAPTURE && resultCode == RESULT_OK) {
             //拍照返回
-            Bundle extras = data.getExtras();
-            Bitmap b = (Bitmap) extras.get("data");
-            setImgShow(b);
+            setImgShow(BitmapUtils.getDiskBitmap(AmUtlis.getPhotoFile().getAbsolutePath()));
         } else if (data != null && requestCode == Constant.ALBUM && resultCode == RESULT_OK) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};

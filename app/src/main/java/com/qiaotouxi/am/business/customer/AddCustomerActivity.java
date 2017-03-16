@@ -184,15 +184,19 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data != null && requestCode == Constant.CAPTURE && resultCode == RESULT_OK) {
+        if (requestCode == Constant.CAPTURE && resultCode == RESULT_OK) {
             //拍照返回
-            AmUtlis.deleteFile(imgPath);
-            Bundle extras = data.getExtras();
-            b = (Bitmap) extras.get("data");
+//            AmUtlis.deleteFile(imgPath);
+
+//            Bundle extras = data.getExtras();
+//            b = (Bitmap) extras.get("data");
+//            imgTx.setImageBitmap(b);
+
+            b = BitmapUtils.getDiskBitmap(AmUtlis.getPhotoFile().getAbsolutePath());
             imgTx.setImageBitmap(b);
 
         } else if (data != null && requestCode == Constant.ALBUM && resultCode == RESULT_OK) {
-            AmUtlis.deleteFile(imgPath);
+//            AmUtlis.deleteFile(imgPath);
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(selectedImage,
@@ -251,6 +255,5 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onBackPressed() {
         AmUtlis.showCloseAlert(AddCustomerActivity.this);
-
     }
 }

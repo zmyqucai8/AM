@@ -141,7 +141,7 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
             equipmentDaoDao.insert(dao);
             AmUtlis.showToast("添加成功");
             String text = "品牌型号：" + name + "\r\n出厂编号：" + ccbh + "\r\n发动机编号：" + fdjbh + "\r\n备注信息：" + bzxx;
-            FileUtils.writeTxt(BitmapUtils.getFilePath() + name + fdjbh + "/" + name + ".txt", text);
+            FileUtils.writeTxt(BitmapUtils.getFilePath() + name + fdjbh + "/" + name + fdjbh + ".txt", text);
             AmUtlis.refreshEquipmentManageData(Constant.EQUIPMENT_SOLD_NO);
             finish();
         } catch (Exception e) {
@@ -152,11 +152,9 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data != null && requestCode == Constant.CAPTURE && resultCode == RESULT_OK) {
+        if (requestCode == Constant.CAPTURE && resultCode == RESULT_OK) {
             //拍照返回
-            Bundle extras = data.getExtras();
-            Bitmap b = (Bitmap) extras.get("data");
-            setImgShow(b);
+            setImgShow(BitmapUtils.getDiskBitmap(AmUtlis.getPhotoFile().getAbsolutePath()));
         } else if (data != null && requestCode == Constant.ALBUM && resultCode == RESULT_OK) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
