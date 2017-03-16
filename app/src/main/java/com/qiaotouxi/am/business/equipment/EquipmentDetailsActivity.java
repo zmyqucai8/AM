@@ -112,6 +112,9 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
     private String imgPathCcbh = "";//出厂编号返回的photo
     private String imgPathRjhy = "";//人机合影返回的photo
 
+
+    private String txtName;//设备出售之前的txt文件名
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,6 +123,7 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
         mEquipmentDao = DaoUtils.getEquipmentByID(EquipmentDetailsActivity.this, getIntent().getStringExtra(Constant.EQUIPMENT_ID));
         mStartType = getIntent().getIntExtra(Constant.START_TYPE, Constant.EQUIPMENT_ALL);
         AmUtlis.showLog("设备详情=" + mEquipmentDao.toString());
+        txtName = mEquipmentDao.getDirPath();
         initViewData();
     }
 
@@ -284,28 +288,13 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
      */
     private void save(boolean sell, boolean payment, String phone, String date) {
 
-        if (TextUtils.isEmpty(imgPathCcbh)) {
-            AmUtlis.showToast("请上传出厂编号照片");
-            AmUtlis.scrollViewToButtomTop(scrollView, true);
-            return;
-        }
-        if (TextUtils.isEmpty(imgPathFdjbh)) {
-            AmUtlis.showToast("请上传发动机编号照片");
-            AmUtlis.scrollViewToButtomTop(scrollView, true);
-            return;
-        }
         if (sell) {
-            if (TextUtils.isEmpty(imgPathRjhy)) {
+            if (!mEquipmentDao.getSell() && rjhyBitmap == null) {
                 AmUtlis.showToast("请上传人机合影照片");
                 AmUtlis.scrollViewToButtomTop(scrollView, true);
                 return;
             }
         }
-
-        AmUtlis.showLog("出厂编号path=" + imgPathCcbh);
-        AmUtlis.showLog("发动机编号path=" + imgPathFdjbh);
-        AmUtlis.showLog("人机合影path=" + imgPathRjhy);
-
         String name = etName.getText().toString();
         if (TextUtils.isEmpty(name)) {
             AmUtlis.showToast("请填写品牌型号");
@@ -323,6 +312,7 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
             return;
         }
         String bzxx = etBzxx.getText().toString();
+        saveImg();
         //更新数据
         mEquipmentDao.setPhoto_ccbh(imgPathCcbh);
         mEquipmentDao.setPhoto_fdjbh(imgPathFdjbh);
@@ -340,20 +330,19 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
         if (null != customer && sell) {
             customer.setBuy(true);
             String engine_id_list = customer.getEngine_id_list();
-            StringBuilder engineIDs = new StringBuilder();
-            if (!TextUtils.isEmpty(engine_id_list)) {
-                engineIDs.append(engine_id_list);
-                engineIDs.append("," + fdjbh);
-            } else {
-                engineIDs.append(fdjbh);
+            if (!engine_id_list.contains(fdjbh)) {//防止已出售设备修改数据时重复添加
+                StringBuilder engineIDs = new StringBuilder();
+                if (!TextUtils.isEmpty(engine_id_list)) {
+                    engineIDs.append(engine_id_list);
+                    engineIDs.append("," + fdjbh);
+                } else {
+                    engineIDs.append(fdjbh);
+                }
+                customer.setEngine_id_list(engineIDs.toString());
             }
-            customer.setEngine_id_list(engineIDs.toString());
             DaoUtils.updateCustomerDao(EquipmentDetailsActivity.this, customer);
             if ("保存修改".equals(btnSave.getText().toString())) {
                 AmUtlis.showToast("修改成功");
-                //更新设备txt文档
-                String text = "品牌型号：" + name + "\r\n出厂编号：" + ccbh + "\r\n发动机编号：" + fdjbh + "\r\n备注信息：" + bzxx;
-                FileUtils.writeTxt(BitmapUtils.getFilePath() + name + fdjbh + "/" + name + ".txt", text);
             } else {
                 //出售成功， 把设备照片移动到当前客户文件夹下,注意数据库的路径也要修改
                 String equipmentDirPath = mEquipmentDao.getDirPath();
@@ -362,11 +351,19 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
                 mEquipmentDao.setPhoto_rjhy(mEquipmentDao.getPhoto_rjhy().replace(equipmentDirPath, customerDirPath));
                 mEquipmentDao.setPhoto_fdjbh(mEquipmentDao.getPhoto_fdjbh().replace(equipmentDirPath, customerDirPath));
                 mEquipmentDao.setPhoto_ccbh(mEquipmentDao.getPhoto_ccbh().replace(equipmentDirPath, customerDirPath));
+                mEquipmentDao.setDirPath(customerDirPath);
                 App.getDaoSession(EquipmentDetailsActivity.this).getEquipmentDaoDao().update(mEquipmentDao);
                 AmUtlis.showToast("出售成功");
             }
         } else {
             AmUtlis.showToast("保存成功");
+        }
+        //更新设备txt文档
+        String text = "品牌型号：" + name + "\r\n出厂编号：" + ccbh + "\r\n发动机编号：" + fdjbh + "\r\n备注信息：" + bzxx;
+        if (sell) {
+            FileUtils.writeTxt(BitmapUtils.getFilePath() + customer.getDirPath() + "/" + mEquipmentDao.getTxtName() + ".txt", text);
+        } else {
+            FileUtils.writeTxt(BitmapUtils.getFilePath() + mEquipmentDao.getDirPath() + "/" + mEquipmentDao.getTxtName() + ".txt", text);
         }
         if (sell) {
             AmUtlis.refreshEquipmentManageData(Constant.EQUIPMENT_SOLD_YES);
@@ -377,18 +374,63 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
     }
 
     /**
+     * 保存img
+     */
+    private void saveImg() {
+        if (ccbhBitmap != null) {
+            imgPathCcbh = BitmapUtils.saveImg(ccbhBitmap, mEquipmentDao.getDirPath(), BitmapUtils.IMG_TYPE_CCBH, mEquipmentDao.getPhoto_ccbh());
+        } else {
+            imgPathCcbh = mEquipmentDao.getPhoto_ccbh();
+        }
+        if (fdjbhBitmap != null) {
+            imgPathFdjbh = BitmapUtils.saveImg(fdjbhBitmap, mEquipmentDao.getDirPath(), BitmapUtils.IMG_TYPE_FDJBH, mEquipmentDao.getPhoto_fdjbh());
+        } else {
+            imgPathFdjbh = mEquipmentDao.getPhoto_fdjbh();
+        }
+        if (rjhyBitmap != null) {
+            imgPathRjhy = BitmapUtils.saveImg(rjhyBitmap, mEquipmentDao.getDirPath(), BitmapUtils.IMG_TYPE_RJHY, mEquipmentDao.getPhoto_rjhy());
+        } else {
+            imgPathRjhy = mEquipmentDao.getPhoto_rjhy();
+        }
+    }
+
+    /**
+     * 删除上一张图片
+     */
+    private void deletePhoto() {
+        if (photoType == Constant.PHOTO_FDJBH) {//发动机编号照片
+            if (!TextUtils.isEmpty(imgPathFdjbh))
+                AmUtlis.deleteFile(imgPathFdjbh);
+        } else if (photoType == Constant.PHOTO_CCBH) {//出厂编号照片
+            if (!TextUtils.isEmpty(imgPathCcbh))
+                AmUtlis.deleteFile(imgPathCcbh);
+        } else if (photoType == Constant.PHOTO_RJHY) {//人机合影照片
+            if (!TextUtils.isEmpty(imgPathRjhy))
+                AmUtlis.deleteFile(imgPathRjhy);
+        }
+    }
+
+
+    private Bitmap fdjbhBitmap;
+    private Bitmap ccbhBitmap;
+    private Bitmap rjhyBitmap;
+
+    /**
      * 设置img显示， 根据选择类型
      */
     private void setImgShow(Bitmap b) {
         if (photoType == Constant.PHOTO_FDJBH) {//发动机编号照片
-            imgPathFdjbh = BitmapUtils.saveImg(b, mEquipmentDao.getDirPath(), BitmapUtils.IMG_TYPE_FDJBH);
+            fdjbhBitmap = b;
+//            imgPathFdjbh = BitmapUtils.saveImg(b, mEquipmentDao.getDirPath(), BitmapUtils.IMG_TYPE_FDJBH, mEquipmentDao.getPhoto_fdjbh());
             img_fdjbh.setImageBitmap(b);
 
         } else if (photoType == Constant.PHOTO_CCBH) {//出厂编号照片
-            imgPathCcbh = BitmapUtils.saveImg(b, mEquipmentDao.getDirPath(), BitmapUtils.IMG_TYPE_CCBH);
+            ccbhBitmap = b;
+//            imgPathCcbh = BitmapUtils.saveImg(b, mEquipmentDao.getDirPath(), BitmapUtils.IMG_TYPE_CCBH, mEquipmentDao.getPhoto_ccbh());
             img_ccbh.setImageBitmap(b);
         } else if (photoType == Constant.PHOTO_RJHY) {//人机合影照片
-            imgPathRjhy = BitmapUtils.saveImg(b, mEquipmentDao.getDirPath(), BitmapUtils.IMG_TYPE_RJHY);
+            rjhyBitmap = b;
+//            imgPathRjhy = BitmapUtils.saveImg(b, mEquipmentDao.getDirPath(), BitmapUtils.IMG_TYPE_RJHY, mEquipmentDao.getPhoto_rjhy());
             img_rjhy.setImageBitmap(b);
 
         }
@@ -397,11 +439,9 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data != null && requestCode == Constant.CAPTURE && resultCode == RESULT_OK) {
+        if (requestCode == Constant.CAPTURE && resultCode == RESULT_OK) {
             //拍照返回
-            Bundle extras = data.getExtras();
-            Bitmap b = (Bitmap) extras.get("data");
-            setImgShow(b);
+            setImgShow(BitmapUtils.getDiskBitmap(AmUtlis.getPhotoFile().getAbsolutePath()));
         } else if (data != null && requestCode == Constant.ALBUM && resultCode == RESULT_OK) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
@@ -442,7 +482,6 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
                 AmUtlis.showToast("图片被删除或不存在");
                 return;
             }
-
             setImgShow(bitmap);
 
         } else if (data != null && requestCode == Constant.CUSTMER_SELECT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
@@ -537,18 +576,5 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
         AmUtlis.showCloseAlert(EquipmentDetailsActivity.this);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        //如果没有保存数据
-        if (!TextUtils.isEmpty(imgPathCcbh) && !imgPathCcbh.equals(mEquipmentDao.getPhoto_ccbh())) {
-            AmUtlis.deleteFile(imgPathCcbh);
-        }
-        if (!TextUtils.isEmpty(imgPathFdjbh) && !imgPathFdjbh.equals(mEquipmentDao.getPhoto_fdjbh())) {
-            AmUtlis.deleteFile(imgPathFdjbh);
-        }
-        if (!TextUtils.isEmpty(imgPathRjhy) && !imgPathRjhy.equals(mEquipmentDao.getPhoto_rjhy())) {
-            AmUtlis.deleteFile(imgPathRjhy);
-        }
-    }
+
 }

@@ -31,6 +31,7 @@ import com.qiaotouxi.am.business.customer.CostomerManageEvent;
 import com.qiaotouxi.am.business.equipment.EquipmentManageCountEvent;
 import com.qiaotouxi.am.business.equipment.EquipmentManageEvent;
 import com.qiaotouxi.am.framework.base.Constant;
+import com.qiaotouxi.am.framework.view.PhotoPop;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
@@ -692,6 +693,21 @@ public class AmUtlis {
         Intent it = new Intent(Intent.ACTION_VIEW);
         it.setDataAndType(Uri.fromFile(file), "image/*");
         activity.startActivity(it);
+    }
+
+    /**
+     * 获取图片file
+     *
+     * @return
+     */
+    public static File getPhotoFile() {
+        File file = new File(PhotoPop.getPhotoPath());
+        if (!file.exists()) {
+            file.mkdir();
+        }
+        File f = new File(file.getAbsolutePath(), "img.jpg");
+
+        return f;
     }
 
 

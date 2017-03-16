@@ -63,12 +63,14 @@ public class EquipmentDao {
 
     @Property(nameInDb = "DIR_PATH")
     private String dirPath;  //当前用户存储的路径dir
+    @Property(nameInDb = "TXT_NAME")
+    private String txtName;//当前设备资料的txt文件名
 
 
     public EquipmentDao(String photo_fdjbh, String photo_ccbh,
                         String photo_rjhy, String name, String engine_id,
                         String factory_id, String remark, boolean sell,
-                        boolean payment, String date, String phone) {
+                        boolean payment, String date, String phone, String txtname) {
         this.photo_fdjbh = photo_fdjbh;
         this.photo_ccbh = photo_ccbh;
         this.photo_rjhy = photo_rjhy;
@@ -81,13 +83,14 @@ public class EquipmentDao {
         this.date = date;
         this.phone = phone;
         this.dirPath = name + engine_id;
+        this.txtName = txtname;
     }
 
 
-    @Generated(hash = 1864686661)
-    public EquipmentDao(Long id, String photo_fdjbh, String photo_ccbh, String photo_rjhy,
-                        String name, String engine_id, String factory_id, String remark, boolean sell,
-                        boolean payment, String date, String phone, String dirPath) {
+    @Generated(hash = 208140055)
+    public EquipmentDao(Long id, String photo_fdjbh, String photo_ccbh, String photo_rjhy, String name,
+                        String engine_id, String factory_id, String remark, boolean sell, boolean payment,
+                        String date, String phone, String dirPath, String txtName) {
         this.id = id;
         this.photo_fdjbh = photo_fdjbh;
         this.photo_ccbh = photo_ccbh;
@@ -101,6 +104,7 @@ public class EquipmentDao {
         this.date = date;
         this.phone = phone;
         this.dirPath = dirPath;
+        this.txtName = txtName;
     }
 
 
@@ -218,6 +222,16 @@ public class EquipmentDao {
 
     public void setDirPath(String dirPath) {
         this.dirPath = dirPath;
+    }
+
+
+    public String getTxtName() {
+        return this.txtName;
+    }
+
+
+    public void setTxtName(String txtName) {
+        this.txtName = txtName;
     }
 
 }

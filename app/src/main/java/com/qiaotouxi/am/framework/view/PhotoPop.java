@@ -5,7 +5,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -17,6 +19,7 @@ import android.widget.PopupWindow;
 import com.qiaotouxi.am.R;
 import com.qiaotouxi.am.framework.base.Constant;
 import com.qiaotouxi.am.framework.utils.AmUtlis;
+import com.qiaotouxi.am.framework.utils.SDCardUtils;
 
 /**
  * @Created by zmy.
@@ -133,6 +136,14 @@ public class PhotoPop implements View.OnClickListener {
     }
 
     /**
+     * 获取拍照的图片保存路径
+     */
+    public static String getPhotoPath() {
+        return SDCardUtils.getSDCardPublicDir(Environment.DIRECTORY_PICTURES) + "/";
+    }
+
+
+    /**
      * 跳转页面
      *
      * @type 0打开相机 1打开相册
@@ -140,6 +151,7 @@ public class PhotoPop implements View.OnClickListener {
     public void startActivity(int type) {
         if (type == 0) {
             Intent it = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            it.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(AmUtlis.getPhotoFile()));
             mAct.startActivityForResult(it, Constant.CAPTURE);
         } else {
             Intent intent = new Intent(Intent.ACTION_PICK, null);

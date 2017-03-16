@@ -37,19 +37,19 @@ public class BitmapUtils {
     public static Bitmap getDiskBitmap(String pathString) {
         Bitmap bitmap = null;
         BitmapFactory.Options options;
-        File file = new File(pathString);
-        if (file.exists()) {
-            bitmap = BitmapFactory.decodeFile(pathString);
+//        File file = new File(pathString);
+//        if (file.exists()) {
+//            bitmap = BitmapFactory.decodeFile(pathString);
+//        }
+
+        try {
+            options = new BitmapFactory.Options();
+            options.inSampleSize = 2;
+            bitmap = BitmapFactory.decodeFile(pathString, options);
+        } catch (Exception e1) {
+            AmUtlis.showLog("图片解析错误");
         }
-        if (bitmap == null) {
-            try {
-                options = new BitmapFactory.Options();
-                options.inSampleSize = 2;
-                bitmap = BitmapFactory.decodeFile(pathString, options);
-            } catch (Exception e1) {
-                AmUtlis.showLog("图片解析错误");
-            }
-        }
+
 
         return bitmap;
     }
@@ -78,6 +78,49 @@ public class BitmapUtils {
         if (SDCardUtils.isSDCardMounted()) // 判断是否可以对SDcard进行操作
         {    // 获取SDCard指定目录下
 
+            FileOutputStream out = null;
+            String sdCardDir = Environment.getExternalStorageDirectory() + DIR + dir;//单独的文件夹
+
+            File dirFile = new File(sdCardDir);  //目录转化成文件夹
+            if (!dirFile.exists()) {              //如果不存在，那就建立这个文件夹
+                dirFile.mkdirs();
+            }                          //文件夹有啦，就可以保存图片啦
+            File file = new File(sdCardDir, nameLetter + System.currentTimeMillis() + ".jpg");// 在SDcard的目录下创建图片文,以当前时间为其命名
+            path = file.getAbsolutePath();
+            try {
+                out = new FileOutputStream(file);
+                btImage.compress(Bitmap.CompressFormat.JPEG, 100, out);
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            try {
+                out.flush();
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            AmUtlis.showLog("图片保存成功=" + path);
+        }
+        return path;
+    }
+
+
+    /**
+     * 保存bitmap到sdcrad ，
+     *
+     * @param btImage
+     * @return 返回保存路径
+     * @nameLetter 图片名字的首字母
+     * @dir 设备 或者 客户 的文件夹路径
+     * @oldPath 原图
+     */
+    public static String saveImg(Bitmap btImage, String dir, String nameLetter, String oldPath) {
+        String path = "";
+        if (SDCardUtils.isSDCardMounted()) // 判断是否可以对SDcard进行操作
+        {    // 获取SDCard指定目录下
+
 
             FileOutputStream out = null;
             String sdCardDir = Environment.getExternalStorageDirectory() + DIR + dir;//单独的文件夹
@@ -90,7 +133,7 @@ public class BitmapUtils {
             path = file.getAbsolutePath();
             try {
                 out = new FileOutputStream(file);
-                btImage.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                btImage.compress(Bitmap.CompressFormat.JPEG, 100, out);
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -102,10 +145,14 @@ public class BitmapUtils {
                 e.printStackTrace();
             }
 
-            AmUtlis.showLog("文件保存成功=" + path);
+            AmUtlis.showLog("图片保存成功=" + path);
+            //删除原头像
+            File oldFile = new File(oldPath);
+            if (oldFile.exists()) {
+                oldFile.delete();
+            }
         }
         return path;
     }
-
 
 }

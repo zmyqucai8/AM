@@ -210,10 +210,10 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
      */
     private void saveData() {
 
-        if (TextUtils.isEmpty(imgPath)) {
-            AmUtlis.showToast("请上传照片");
-            return;
-        }
+//        if () {
+//            AmUtlis.showToast("请上传照片");
+//            return;
+//        }
         String name = etName.getText().toString();
         if (TextUtils.isEmpty(name)) {
             AmUtlis.showToast("请填写姓名");
@@ -225,10 +225,7 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
             return;
         }
         String cardId = etCardID.getText().toString();
-//        if (TextUtils.isEmpty(cardId)) {
-//            AmUtlis.showToast("请填写身份证号码");
-//            return;
-//        }
+
         String location = etLocation.getText().toString();
 
         String bzxx = etBzxx.getText().toString();
@@ -246,7 +243,11 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
                 sex = 1;
             }
         }
-
+        if (txBitmap != null) {
+            imgPath = BitmapUtils.saveImg(txBitmap, mCustomerDao.getDirPath(), BitmapUtils.IMG_TYPE_KHTX, mCustomerDao.getPhoto_path());
+        } else {
+            imgPath = mCustomerDao.getPhoto_path();
+        }
         //更新数据
         mCustomerDao.setPhoto_path(imgPath);
         mCustomerDao.setName(name);
@@ -262,16 +263,19 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
         AmUtlis.refreshCustomerManageData();
     }
 
+    private Bitmap txBitmap;//拍照或相册选择的头像bitmap
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data != null && requestCode == Constant.CAPTURE && resultCode == RESULT_OK) {
+        if (requestCode == Constant.CAPTURE && resultCode == RESULT_OK) {
             //拍照返回
-            Bundle extras = data.getExtras();
-            Bitmap b = (Bitmap) extras.get("data");
-            imgTx.setImageBitmap(b);
-            imgPath = BitmapUtils.saveImg(b, mCustomerDao.getDirPath(), BitmapUtils.IMG_TYPE_KHTX);
+            txBitmap = BitmapUtils.getDiskBitmap(AmUtlis.getPhotoFile().getAbsolutePath());
+            imgTx.setImageBitmap(txBitmap);
         } else if (data != null && requestCode == Constant.ALBUM && resultCode == RESULT_OK) {
+            if (!TextUtils.isEmpty(imgPath)) {
+                AmUtlis.deleteFile(imgPath);
+            }
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(selectedImage,
@@ -285,14 +289,13 @@ public class CustomerDetailsActivity extends BaseActivity implements View.OnClic
                 imgPath = cursor.getString(columnIndex);
                 cursor.close();
             }
-            Bitmap bitmap = BitmapUtils.getDiskBitmap(imgPath);
-            if (bitmap == null) {
+            txBitmap = BitmapUtils.getDiskBitmap(imgPath);
+            if (txBitmap == null) {
                 AmUtlis.showToast("图片被删除或找不到");
                 return;
             }
-            imgTx.setImageBitmap(bitmap);
-            imgPath = BitmapUtils.saveImg(bitmap, mCustomerDao.getDirPath(), BitmapUtils.IMG_TYPE_KHTX);
-            AmUtlis.showLog("imgPath=" + imgPath);
+            imgTx.setImageBitmap(txBitmap);
+
         }
 
     }

@@ -128,7 +128,7 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
         imgPathCcbh = BitmapUtils.saveImg(ccbhBitmap, name + fdjbh, BitmapUtils.IMG_TYPE_CCBH);
         imgPathFdjbh = BitmapUtils.saveImg(fdjbhBitmap, name + fdjbh, BitmapUtils.IMG_TYPE_FDJBH);
 
-        EquipmentDao dao = new EquipmentDao(imgPathFdjbh, imgPathCcbh, "", name, fdjbh, ccbh, bzxx, false, false, "", "");
+        EquipmentDao dao = new EquipmentDao(imgPathFdjbh, imgPathCcbh, "", name, fdjbh, ccbh, bzxx, false, false, "", "", name + fdjbh);
         EquipmentDaoDao equipmentDaoDao = App.getDaoSession(this).getEquipmentDaoDao();
         try {
             EquipmentDao unique = equipmentDaoDao.queryRawCreate("where ENGINE_ID=? order by ENGINE_ID", fdjbh).unique();
@@ -141,7 +141,7 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
             equipmentDaoDao.insert(dao);
             AmUtlis.showToast("添加成功");
             String text = "品牌型号：" + name + "\r\n出厂编号：" + ccbh + "\r\n发动机编号：" + fdjbh + "\r\n备注信息：" + bzxx;
-            FileUtils.writeTxt(BitmapUtils.getFilePath() + name + fdjbh + "/" + name + ".txt", text);
+            FileUtils.writeTxt(BitmapUtils.getFilePath() + name + fdjbh + "/" + name + fdjbh + ".txt", text);
             AmUtlis.refreshEquipmentManageData(Constant.EQUIPMENT_SOLD_NO);
             finish();
         } catch (Exception e) {
@@ -152,11 +152,9 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data != null && requestCode == Constant.CAPTURE && resultCode == RESULT_OK) {
+        if (requestCode == Constant.CAPTURE && resultCode == RESULT_OK) {
             //拍照返回
-            Bundle extras = data.getExtras();
-            Bitmap b = (Bitmap) extras.get("data");
-            setImgShow(b);
+            setImgShow(BitmapUtils.getDiskBitmap(AmUtlis.getPhotoFile().getAbsolutePath()));
         } else if (data != null && requestCode == Constant.ALBUM && resultCode == RESULT_OK) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
@@ -198,12 +196,10 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
      */
     private void setImgShow(Bitmap b) {
         if (photoType == Constant.PHOTO_FDJBH) {
-            AmUtlis.deleteFile(imgPathFdjbh);
             fdjbhBitmap = b;
             img_fdjbh.setImageBitmap(b);
 
         } else if (photoType == Constant.PHOTO_CCBH) {
-            AmUtlis.deleteFile(imgPathCcbh);
             ccbhBitmap = b;
             img_ccbh.setImageBitmap(b);
         }
