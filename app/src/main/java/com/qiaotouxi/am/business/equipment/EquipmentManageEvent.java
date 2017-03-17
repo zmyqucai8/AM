@@ -3,7 +3,7 @@ package com.qiaotouxi.am.business.equipment;
 /**
  * @Created by zmy.
  * @Date 2017/3/6 0006.
- * 刷新设备管理的evnet
+ * 刷新设备管理的evnet.
  */
 
 public class EquipmentManageEvent {
