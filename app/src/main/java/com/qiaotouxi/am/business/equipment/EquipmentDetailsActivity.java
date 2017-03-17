@@ -354,6 +354,7 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
                 mEquipmentDao.setDirPath(customerDirPath);
                 App.getDaoSession(EquipmentDetailsActivity.this).getEquipmentDaoDao().update(mEquipmentDao);
                 AmUtlis.showToast("出售成功");
+                //
             }
         } else {
             AmUtlis.showToast("保存成功");
