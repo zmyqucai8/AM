@@ -113,8 +113,6 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
     private String imgPathRjhy = "";//人机合影返回的photo
 
 
-    private String txtName;//设备出售之前的txt文件名
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,7 +121,6 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
         mEquipmentDao = DaoUtils.getEquipmentByID(EquipmentDetailsActivity.this, getIntent().getStringExtra(Constant.EQUIPMENT_ID));
         mStartType = getIntent().getIntExtra(Constant.START_TYPE, Constant.EQUIPMENT_ALL);
         AmUtlis.showLog("设备详情=" + mEquipmentDao.toString());
-        txtName = mEquipmentDao.getDirPath();
         initViewData();
     }
 
@@ -371,7 +368,6 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
         }
         AmUtlis.refreshEquipmentManageData(Constant.EQUIPMENT_SOLD_NO);
         finish();
-
     }
 
     /**
