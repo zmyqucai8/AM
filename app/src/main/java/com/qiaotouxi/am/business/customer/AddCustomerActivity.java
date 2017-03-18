@@ -114,23 +114,23 @@ public class AddCustomerActivity extends BaseActivity implements View.OnClickLis
             AmUtlis.showToast("请上传照片");
             return;
         }
-        String name = etName.getText().toString();
+        String name = etName.getText().toString().trim();
         if (TextUtils.isEmpty(name)) {
             AmUtlis.showToast("请填写姓名");
             return;
         }
-        String phone = etPhone.getText().toString();
+        String phone = etPhone.getText().toString().trim();
         if (TextUtils.isEmpty(phone)) {
             AmUtlis.showToast("请填写电话");
             return;
         }
-        String cardId = etCardID.getText().toString();
+        String cardId = etCardID.getText().toString().trim();
 //        if(TextUtils.isEmpty(cardId)){
 //            AmUtlis.showToast("请填写身份证号码");
 //            return;
 //        }
-        String location = etLocation.getText().toString();
-        String bzxx = etBzxx.getText().toString();
+        String location = etLocation.getText().toString().trim();
+        String bzxx = etBzxx.getText().toString().trim();
         int sex = -1;//1=男， 0=女
         boolean checkedFemale = rbFemale.isChecked();
         boolean checkedMale = rbMale.isChecked();
