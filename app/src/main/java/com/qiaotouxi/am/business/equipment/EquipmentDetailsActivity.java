@@ -112,7 +112,7 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
     private String imgPathCcbh = "";//出厂编号返回的photo
     private String imgPathRjhy = "";//人机合影返回的photo
 
-
+    String engine_id;//未修改的发动机编号,如果修改了发动机编号,并且设备已出售状态,需要更新客户数据
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,6 +121,7 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
         mEquipmentDao = DaoUtils.getEquipmentByID(EquipmentDetailsActivity.this, getIntent().getStringExtra(Constant.EQUIPMENT_ID));
         mStartType = getIntent().getIntExtra(Constant.START_TYPE, Constant.EQUIPMENT_ALL);
         AmUtlis.showLog("设备详情=" + mEquipmentDao.toString());
+        engine_id = mEquipmentDao.getEngine_id();
         initViewData();
     }
 
@@ -292,23 +293,23 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
                 return;
             }
         }
-        String name = etName.getText().toString();
+        String name = etName.getText().toString().trim();
         if (TextUtils.isEmpty(name)) {
             AmUtlis.showToast("请填写品牌型号");
             return;
         }
 
-        String ccbh = etCcbh.getText().toString();
+        String ccbh = etCcbh.getText().toString().trim();
         if (TextUtils.isEmpty(name)) {
             AmUtlis.showToast("请填写出厂编号");
             return;
         }
-        String fdjbh = etFdjbh.getText().toString();
+        String fdjbh = etFdjbh.getText().toString().trim();
         if (TextUtils.isEmpty(name)) {
             AmUtlis.showToast("请填写发动机编号");
             return;
         }
-        String bzxx = etBzxx.getText().toString();
+        String bzxx = etBzxx.getText().toString().trim();
         saveImg();
         //更新数据
         mEquipmentDao.setPhoto_ccbh(imgPathCcbh);
@@ -330,11 +331,16 @@ public class EquipmentDetailsActivity extends BaseActivity implements View.OnCli
             if (!engine_id_list.contains(fdjbh)) {//防止已出售设备修改数据时重复添加
                 StringBuilder engineIDs = new StringBuilder();
                 if (!TextUtils.isEmpty(engine_id_list)) {
-                    engineIDs.append(engine_id_list);
-                    engineIDs.append("," + fdjbh);
+                    if (engine_id_list.contains(engine_id)) {//如果是已出售则修改否则添加
+                        engineIDs.append(engine_id_list.replace(engine_id, fdjbh));
+                    } else {
+                        engineIDs.append(engine_id_list);
+                        engineIDs.append("," + fdjbh);
+                    }
                 } else {
                     engineIDs.append(fdjbh);
                 }
+
                 customer.setEngine_id_list(engineIDs.toString());
             }
             DaoUtils.updateCustomerDao(EquipmentDetailsActivity.this, customer);
