@@ -109,17 +109,17 @@ public class AddEquipmentActivity extends BaseActivity implements View.OnClickLi
         AmUtlis.showLog("出厂编号path=" + imgPathCcbh);
         AmUtlis.showLog("发动机编号path=" + imgPathFdjbh);
 
-        String name = etName.getText().toString();
+        String name = etName.getText().toString().trim();
         if (TextUtils.isEmpty(name)) {
             AmUtlis.showToast("请填写品牌型号");
             return;
         }
-        String ccbh = etCcbh.getText().toString();
+        String ccbh = etCcbh.getText().toString().trim();
         if (TextUtils.isEmpty(ccbh)) {
             AmUtlis.showToast("请填写出厂编号");
             return;
         }
-        String fdjbh = etFdjbh.getText().toString();
+        String fdjbh = etFdjbh.getText().toString().trim();
         if (TextUtils.isEmpty(fdjbh)) {
             AmUtlis.showToast("请填写发动机编号");
             return;
